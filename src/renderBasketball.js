@@ -108,9 +108,9 @@ function generateLinesMaterial(){
 	let linesColor = document.querySelector("input#basketball_lines").value
 
 	if(linesColor !== "false"){
-		material = new LineMaterial({ color: linesColor, linewidth: 0.002})
+		material = new LineMaterial({ color: linesColor, linewidth: 0.001})
 	}else{
-      material = new LineMaterial( { color: 0xffffff, linewidth: 0.002});
+      material = new LineMaterial( { color: 0xffffff, linewidth: 0.001});
 	}
 
 	return material

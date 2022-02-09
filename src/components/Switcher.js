@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { renderHoop, renderNet } from "../render3DElements";
+import { renderHoop, renderNet, changeHoopPositions } from "../render3DElements";
 
 function Switcher({name, imgName, width, length}){
 	let [ checked, setChecked ] = useState(false)
@@ -64,6 +64,10 @@ function Switcher({name, imgName, width, length}){
 		}
 		renderHoop(hoops, width, length)
 	}, [hoops])
+
+	useEffect( () => {
+		changeHoopPositions(width,length)
+	}, [width, length])
 	return(
 		<>
 		<span>{name}</span>

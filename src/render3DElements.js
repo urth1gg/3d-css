@@ -9,6 +9,7 @@ let hoopsPositions = {};
 let ambientLight = false;
 let fencesPositions = {};
 let lightPositions = {};
+
 const texture = new THREE.TextureLoader().load('/static/assets/3d/tennis_net/Textures/Net_new x4096.png');
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
@@ -480,7 +481,7 @@ function renderHoopTopMiddle(model, width,length){
 	model = model.clone()
 	window.bb = model;
 	model.scale.set(0.06,0.06,0.06)
-	model.position.set(0, 0, -27-((width+2-27)/2) + 4)
+	model.position.set(0, 0, 0)
 	//model.position.set(0,0,0);
 
 	let group = new THREE.Group()
@@ -507,7 +508,7 @@ function renderHoopTopMiddle(model, width,length){
 
 	group.name = 'hoopTopMiddle'
 	group.position.x = 61.4 + 16 / 2
-
+	group.position.z = -27-((width+2-27)/2) + 4;
 	window.scene.add(group)
 }
 
@@ -548,6 +549,8 @@ function renderHoopBottomMiddle(model, width,length){
 }
 
 export function renderFence(array,width,length){
+	if(!window.renderer) return;
+
 	loadFence((fbx) => {
 		if(array[1] === 1 && !fencesPositions['left'] ) { renderFenceLeft(fbx,width,length); fencesPositions['left'] = true }
 		if(array[0] === 1 && !fencesPositions['top'] ) { renderFenceTop(fbx, width, length); fencesPositions['top'] = true }
@@ -897,6 +900,43 @@ export function changeLightPositions(width, length){
 	if(lightBottomRight.length !== 0){
 		lightBottomRight[0].position.x = -(length+2-78)/2+length - 3
 		lightBottomRight[0].position.z = (width-2-27)/2 + 3
+	}
+
+	window.renderer.render(window.scene, window.camera)
+}
+
+export function changeHoopPositions(width,length){
+
+	if(!window.scene) return;
+
+	let hoopLeft = window.scene.children.filter(x => x.name === 'hoopLeft');
+	let hoopTop = window.scene.children.filter(x => x.name === 'hoopTop');
+	let hoopTopMiddle = window.scene.children.filter(x => x.name === 'hoopTopMiddle');
+	let hoopBottomMiddle = window.scene.children.filter(x => x.name === 'hoopBottomMiddle');
+	let hoopRight = window.scene.children.filter(x => x.name === 'hoopRight');
+
+
+	if(hoopLeft.length !== 0){
+		hoopLeft[0].position.x = -((length-78)/2-4)
+	}
+
+	if(hoopRight.length !== 0){
+		hoopRight[0].position.x = length+2-(length+2-78)/2 - 4
+		hoopRight[0].position.z = -(27/2);
+	}
+
+	if(hoopTop.length !== 0){
+		hoopTop[0].position.x = 78/2
+		hoopTop[0].position.z = -27-((width+2-27)/2) + 4;
+	}
+
+	if(hoopTopMiddle.length !== 0){
+		hoopTopMiddle[0].position.z = -27-((width+2-27)/2) + 4;
+	}
+
+	if(hoopBottomMiddle.length !== 0){
+		hoopBottomMiddle[0].position.x = 61.4 + 16 / 2
+		hoopBottomMiddle[0].position.z = (width/2)-(27.75/2) + 0.4 - 3
 	}
 
 	window.renderer.render(window.scene, window.camera)
