@@ -941,3 +941,31 @@ export function changeHoopPositions(width,length){
 
 	window.renderer.render(window.scene, window.camera)
 }
+
+export function renderGallery(type){
+	let fenceTop = window.scene.children.filter(x => x.name === 'fenceTop')
+	let fenceBottom =  window.scene.children.filter(x => x.name === 'fenceBottom')
+
+
+	if(fenceBottom.length !== 0){
+		let children = [ ...fenceBottom[0].children ]
+		children.pop();
+		children.shift();
+
+		children.forEach(x => {
+			x.scale.y = !type ? 0.5 : 0.9;
+		})
+	}
+
+	if(fenceTop.length !== 0){
+		let children = [ ...fenceTop[0].children ]
+		children.pop();
+		children.shift();
+
+		children.forEach(x => {
+			x.scale.y = !type ? 0.5 : 0.9;
+		})
+	}
+
+	window.renderer.render(window.scene, window.camera)
+}

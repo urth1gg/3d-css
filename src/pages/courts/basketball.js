@@ -10,11 +10,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { extend } from "@react-three/fiber";
-import { renderBasketball, removeBasketball, changeBasketballLinesPositions } from "../../renderBasketball";
+import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBasketballDefault } from "../../renderBasketball";
 import { renderTennis, renderBorderAndSurface } from "../../renderTennis";
 import { renderPickleball, renderTwoPickleBallCourts } from "../../renderPickleball";
 import hexToRgb from "../../helpers/hexToRgb";
-import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
+import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions } from "../../render3DElements";
 import Animated from "../../components/Animated";
 
 export default function Tennis(){
@@ -28,18 +28,15 @@ export default function Tennis(){
 	let [ borderColor, setBorderColor ] = useState('#000000');
 	let [ tennisLineColor, setTennisLineColor ] = useState('#ffffff');
 	let [ tennisSurfaceColor, setTennisSurfaceColor ] = useState('#ffffff');
-	let [ defaultWidth, setDefaultWidth ] = useState(60)
-	let [ defaultLength, setDefaultLength ] = useState(120)
+	let [ defaultWidth, setDefaultWidth ] = useState(50)
+	let [ defaultLength, setDefaultLength ] = useState(94)
 	let [ basketballLines, setBasketballLines ] = useState([0,0,0,0,0])
 	let [ loading, setLoading ] = useState(false)
-	let [ zoomLevel, setZoomLevel ] = useState(0)
 	let renderer = useRef(null)
 	let camera = useRef(null);
 	let scene = useRef(null)
 	let tennisLineMaterial = useRef( new LineMaterial( { color: 0xffffff, linewidth: 0.002}) );
 	let loadedCounter = useRef(0);
-	let prevZoom = useRef(0);
-	let [ galleryFencesUsed, setGalleryFencesUsed ] = useState(false)
 
 	function typeEffect(value){
 		setType(value)
@@ -211,29 +208,6 @@ export default function Tennis(){
 		}
 	}
 
-	function generateImage(){
-		if(type === 'Laykold acrylic coating'){
-			return "https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg"
-		}else{
-			return "//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396"
-		}
-	}
-
-	function generateHref(){
-		if(type === 'Laykold acrylic coating'){
-			return "https://courtsurfacespecialists.com"
-		}else{
-			return "https://diycourt.ca"
-		}
-	}
-
-	function generateAlt(){
-		if(type === 'Laykold acrylic coating'){
-			return "Court Surface Specialists Ltd"
-		}else{
-			return "DIY Court CA"
-		}
-	}
 
 	useEffect(() => {
 		if(!scene.current) return;
@@ -364,13 +338,9 @@ export default function Tennis(){
 		//renderer.current.shadowMap.enabled = true;
 		if(document.querySelector(".threeJS-container")) document.querySelector(".threeJS-container").appendChild( renderer.current.domElement );
 
-
-		camera.current = new THREE.PerspectiveCamera( 12, window.innerWidth / window.innerHeight, 2, 1600 );
-		camera.current.position.set(43.60292714932831, 93.06104139037603, 111.10822453090113 );
-
-		//const pt = new THREE.Vector3(38.50390443253893,0.00003815632718041994,-15.614921552374081)
-		//camera.current.lookAt(pt);
-
+		camera.current = new THREE.PerspectiveCamera( 10, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.current.position.set( 79.09147944717981, 155.97820948342002, 145.73817374355866 );
+		camera.current.lookAt( 0,0,0 );
 
 		window.camera = camera.current
 		scene.current = new THREE.Scene();
@@ -378,71 +348,46 @@ export default function Tennis(){
 		window.scene2 = new THREE.Scene();
 		const controls = new OrbitControls( camera.current, renderer.current.domElement )
 
-		camera.current.zoom = 0.28;
+		camera.current.zoom = 0.29;
 
 		camera.current.updateProjectionMatrix();
 		window.controls = controls;
-
+		controls.target.set(84.22694952487223, 22.005499803815336,4.226747148428594)
+		controls.update()
 
 		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1.5);
 		hemiLight.position.set(0,50,0)
-		scene.current.add(hemiLight);
+		//scene.current.add(hemiLight);
 
 
-		renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
-
-
-    	controls.target.set(39, 0.1, -14);
-    	controls.update();
-
-		controls.minPolarAngle = 0.9320850529728638
-		controls.maxPolarAngle = 0.9320850529728638
-
-		controls.minDistance = 72;
-		controls.maxDistance = 155.93270984626542;
-
-		controls.addEventListener( 'change', (e,a) => {
-
-			let { minDistance, maxDistance } = controls;
-			let distance = controls.getDistance();
-
-			let range = maxDistance - minDistance;
-
-			let percentage = (distance-minDistance)/range;
-
-			if(percentage !== prevZoom.current){
-				setZoomLevel(60 * (1-percentage) )
-			}
-
-			prevZoom.current = percentage;
-			renderer.current.render(scene.current, camera.current)
-		} );
-
-		renderer.current.render(scene.current, camera.current)
-
-		renderNet([1,0])
-	}, [loading])
-
-	useEffect( () => {
-		if(!window.scene) return;
-
-		let spotLight = new THREE.SpotLight(0xffa95c, 1);
+		let spotLight = new THREE.SpotLight(0xffa95c, 1.5);
 		spotLight.castShadow = true;
 		spotLight.shadow.bias = -0.0001;
 		spotLight.shadow.mapSize.width = 1024*10
 		spotLight.shadow.mapSize.height = 1024*10
 		spotLight.position.set(25,65,0)
+		//scene.current.add(spotLight)
+/*		const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
+		scene.current.add( directionalLight );*/
 
+		//renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
+		
+		renderBasketballDefault(defaultWidth, defaultLength)
+		//renderTwoPickleBallCourts()
+		//renderPickleball()
+/*		renderBasketball(renderer.current, scene.current, camera.current, 'top')
+		renderBasketball(renderer.current, scene.current, camera.current, 'top-middle')
+		renderBasketball(renderer.current, scene.current, camera.current, 'bottom-middle')
+		renderBasketball(renderer.current, scene.current, camera.current, 'left')
+		renderBasketball(renderer.current, scene.current, camera.current, 'right')*/
 
-		spotLight.name = "spotLightEffect"
+		controls.addEventListener( 'change', () => renderer.current.render(scene.current, camera.current) );
+		renderer.current.render(scene.current, camera.current)
 
-		if(lights.some(x => x === 1)){
-			if(window.scene.children.every(x => x.name !== 'spotLightEffect')) scene.current.add(spotLight)
-			//scene.current.add(spotLight)
-		}else{
-			window.scene.children = window.scene.children.filter(x => x.name !== 'spotLightEffect')
-		}
+	}, [loading])
 
+	useEffect( () => {
+		if(!window.scene) return;
 		renderLight(lights, defaultWidth, defaultLength)
 	}, [lights])
 
@@ -468,8 +413,8 @@ export default function Tennis(){
 			</Helmet>
 			<div className="left-menu">
 					<div className="center mbot-1">
-				        <a className="logo-img-css" href={generateHref()}>
-				            <img src={generateImage()} alt={generateAlt()} />
+				        <a className="logo-img-css" href="https://diycourt.ca">
+				            <img src="//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396" alt="DIY Court Ca" />
 				        </a>
 					</div>
 					<div>
@@ -514,20 +459,11 @@ export default function Tennis(){
 							</div>
 
 						</div>
-
-						{(fences[3] !== 0 || fences[0] !== 0) &&
-							<label>
-								<button className="ga-fences" onClick={() => {
-									renderGallery(galleryFencesUsed)
-									setGalleryFencesUsed(!galleryFencesUsed)
-								}}>Use {!galleryFencesUsed ? 'gallery' : 'regular'} fences</button>
-							</label>
-						}
 					</div>
 				</div>
 
-				<input type="range" min={0} max={60} value={zoomLevel} onChange={f => f} className="zoomLevel"/>
 				<div className='threeJS-container'>
+
 				</div>
 
 				<div className="right-menu">
@@ -583,13 +519,13 @@ export default function Tennis(){
 						</div>
 
 						<div className="options align-center left-right relative">
-							{/*<SwitcherNet name="Nets" imgName="net" />*/}
+							<SwitcherNet name="Nets" imgName="net" />
 						</div>
 					</div>
 
 					<div className="mtop-1">
-						<WidthSlider defaultValue={60} onChange={sliderOnChange}/>
-						<LongtitudeSlider defaultValue={120} onChange={sliderOnChange}/>
+						<WidthSlider defaultValue={50} onChange={sliderOnChange}/>
+						<LongtitudeSlider defaultValue={94} onChange={sliderOnChange}/>
 					</div>
 
 				</div>

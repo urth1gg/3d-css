@@ -5,6 +5,100 @@ import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
 
+
+export function renderBasketballDefault(defaultWidth, defaultLength){
+	let w = defaultWidth;
+	let l = defaultLength;
+
+	renderBasketball('right', w, l)
+	renderBasketball('left', w, l)
+	renderBorderAndSurface(w,l, true)
+	renderHalfLineBasketball(w, l)
+}
+
+function renderHalfLineBasketball(w, l){
+	const group = new THREE.Group();
+
+	const points = []
+
+	points.push( 0, 0.01, 0 )
+	points.push( 0,0.01, 5 )
+	
+	const geometry = new LineGeometry();
+	geometry.setPositions( points );
+
+	let linesColor = document.querySelector("input#basketball_lines")
+
+	let material = generateLinesMaterial();
+
+	let line = new Line2( geometry, material );
+
+	line._id = "lineBasketball";
+
+	group.add(line)
+
+	window.scene.add(group)
+}
+
+function removeExistingBorderAndSurface(){
+	let prevBorder;
+	let prevSurface;
+
+	if(window.scene.children.filter(x => x._id === 'surface').length !== 0){
+		prevSurface = window.scene.children.filter(x => x._id === 'surface')[0]
+		window.scene.children = window.scene.children.filter(x => x._id !== 'surface')
+	}
+
+	if(window.scene.children.filter(x => x._id === 'border').length !== 0){
+		prevBorder = window.scene.children.filter(x => x._id === 'border')[0]
+		window.scene.children = window.scene.children.filter(x => x._id !== 'border')
+	}
+
+	return [prevSurface, prevBorder]
+}
+export function renderBorderAndSurface(w,l, init){
+
+
+	let [ prevSurface, prevBorder ] = removeExistingBorderAndSurface();
+
+	const backgroundGeometry = new THREE.PlaneGeometry(w, l);
+	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
+	if(init){
+
+		const backgroundMaterial = new THREE.MeshLambertMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
+		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
+		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
+		surface.position.set(39.2,-0.02,-13.57)
+		surface._id = 'surface';
+
+		const borderMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff, side: THREE.DoubleSide, reflectivity: 1} );
+		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+		border.position.set(39.2, -0.03, -13.57);
+		border._id = 'border';
+
+		window.scene.add(surface)
+		window.scene.add(border)
+	}else{
+		const backgroundMaterial = prevSurface.material;
+		const borderMaterial = prevBorder.material
+
+		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
+		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
+		surface.position.set(39.2,-0.02,-13.57)
+		surface._id = 'surface';
+
+		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+		border.position.set(39.2, -0.03, -13.57);
+		border._id = 'border';
+
+		window.scene.add(surface)
+		window.scene.add(border)
+
+	}
+}
+
 export function renderBasketball(position, w, l){
 	if(!window.scene) return;
 
@@ -102,15 +196,15 @@ export function changeBasketballLinesPositions(positions, w,l){
 	})
 }
 
-function generateLinesMaterial(){
+function generateLinesMaterial(lw){
 	let material;
 
 	let linesColor = document.querySelector("input#basketball_lines").value
 
 	if(linesColor !== "false"){
-		material = new LineMaterial({ color: linesColor, linewidth: 0.001})
+		material = new LineMaterial({ color: linesColor, linewidth: lw || 0.0015})
 	}else{
-      material = new LineMaterial( { color: 0xffffff, linewidth: 0.001});
+      material = new LineMaterial( { color: 0xffffff, linewidth: lw || 0.0015});
 	}
 
 	return material
@@ -136,14 +230,8 @@ function removeLinesLeft(scene){
 }
 
 function generateBasketballLinePoints(points){
-	points.push( 0, 0, 0 )
-	points.push( 19, 0, 0 )
-	points.push(19,0,-16)
-	points.push(0,0,-16)
-	points.push( 0, 0, 0 )
-	points.push( 0, 0, -16 )
-	points.push( 19, 0, -16 )
-	points.push( 19, 0, 0 )
+	points.push( 19, 0, -13 )
+	points.push( 19, 0, -3 )
 }
 function renderLinesLeft(scene, width, length){
 	if(scene.children.filter(x => x.name === 'basketballLinesLeft').length !== 0) return;
@@ -165,9 +253,9 @@ function renderLinesLeft(scene, width, length){
 
 	group.add(line)
 
-	drawCircle(3,'#ffffff', 0.002, group)
+	//drawCircle(3,'#ffffff', 0.0015, group)
 	renderHoopBackground(group)
-	drawFreeThrowCircle(5, '#ffffff', 0.002, group)
+	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
 	drawThreePointer(group);
@@ -202,9 +290,9 @@ function renderLinesTop(scene, width,length){
 
 	group.add(line)
 
-	drawCircle(3,'#ffffff', 0.002, group)
+	//drawCircle(3,'#ffffff', 0.0015, group)
 	renderHoopBackground(group)
-	drawFreeThrowCircle(5, '#ffffff', 0.002, group)
+	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
 	drawThreePointer(group);
@@ -240,9 +328,9 @@ function renderLinesRight(scene, width, length){
 
 	group.add(line)
 
-	drawCircle(3,'#ffffff', 0.002, group)
+	//drawCircle(3,'#ffffff', 0.0015, group)
 	renderHoopBackground(group)
-	drawFreeThrowCircle(5, '#ffffff', 0.002, group)
+	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
 	drawThreePointer(group);
@@ -281,9 +369,9 @@ function renderLinesTopMiddle(scene, width,length){
 
 	group.add(line)
 
-	drawCircle(3,'#ffffff', 0.002, group)
+	//drawCircle(3,'#ffffff', 0.0015, group)
 	renderHoopBackground(group)
-	drawFreeThrowCircle(5, '#ffffff', 0.002, group)
+	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
 	drawThreePointer(group);
@@ -319,9 +407,9 @@ function renderLinesBottomMiddle(scene, width, length){
 
 	group.add(line)
 
-	drawCircle(3,'#ffffff', 0.002, group)
+	//drawCircle(3,'#ffffff', 0.0015, group)
 	renderHoopBackground(group)
-	drawFreeThrowCircle(5, '#ffffff', 0.002, group)
+	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
 	drawThreePointer(group);
@@ -341,7 +429,7 @@ function renderLinesBottomMiddle(scene, width, length){
 }
 
 function renderHoopBackground(group){
-		const geometryPlane = new THREE.PlaneGeometry(16,18.7)
+		const geometryPlane = new THREE.PlaneGeometry(9.9,18.7)
 		const geometryCircle = new THREE.CircleGeometry(5,50)
 
 
@@ -451,7 +539,7 @@ function drawFreeThrowCircle(radius, color, lineWidth, group){
     line2._id = "lineBasketball"
 
     group.add( line );
-    group.add( line2 );
+    //group.add( line2 );
 }
 
 function drawSideLinesBottom(group){
@@ -570,37 +658,28 @@ function drawThreePointer(group){
 function drawHashTop(group){
 
 	let points = [];
-
-	points.push(7,0,0);
-	points.push(7,0, 1);
-
 	let geometry = new LineGeometry();
-
-	geometry.setPositions(points);
 
 	let material = generateLinesMaterial()
 	let line = new Line2(geometry, material);
 
-	group.add(line)	
 
-	let _points = [];
+	let linesColor = document.querySelector("input#basketball_lines").value
 
-	_points.push(8,0,0);
-	_points.push(8,0,1);
+	const backgroundGeometry = new THREE.PlaneGeometry(1.2, 1.2);
+	const backgroundMaterial = new THREE.MeshBasicMaterial( {color: linesColor, side: THREE.DoubleSide, reflectivity: 1} );
+	const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
+	surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
+	surface.position.set(7.2,0,-2.5)
 
-	geometry = new LineGeometry();
+	surface.name = 'lineBasketball';
 
-	geometry.setPositions(_points);
-
-	line = new Line2(geometry, material) 
-	line._id = "lineBasketball"
-	group.add( line )
-
+	group.add(surface)
 
 	points = [];
 
-	points.push(11,0,0);
-	points.push(11,0,1);
+	points.push(11,0,-3);
+	points.push(11,0,-2);
 
 	geometry = new LineGeometry();
 
@@ -613,8 +692,8 @@ function drawHashTop(group){
 
 	points = [];
 
-	points.push(14,0,0);
-	points.push(14,0,1);
+	points.push(14,0,-3);
+	points.push(14,0,-2);
 
 	geometry = new LineGeometry();
 
@@ -630,8 +709,8 @@ function drawHashBottom(group){
 
 	let points = [];
 
-	points.push(7,0,-16);
-	points.push(7,0, -17);
+	points.push(7,0,-13);
+	points.push(7,0, -14);
 
 	let geometry = new LineGeometry();
 
@@ -641,12 +720,12 @@ function drawHashBottom(group){
 
 	let line = new Line2(geometry, material);
 	line._id = "lineBasketball"
-	group.add(line)	
+	//group.add(line)	
 
 	let _points = [];
 
-	_points.push(8,0,-16);
-	_points.push(8,0,-17);
+	_points.push(8,0,-13);
+	_points.push(8,0,-14);
 
 	geometry = new LineGeometry();
 
@@ -655,13 +734,25 @@ function drawHashBottom(group){
 	line = new Line2(geometry, material);
 	line._id = "lineBasketball"
 
-	group.add( line )
+	//group.add( line )
 
+
+	let linesColor = document.querySelector("input#basketball_lines").value
+
+	const backgroundGeometry = new THREE.PlaneGeometry(1.2, 1.2);
+	const backgroundMaterial = new THREE.MeshBasicMaterial( {color: linesColor, side: THREE.DoubleSide, reflectivity: 1} );
+	const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
+	surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
+	surface.position.set(7.2,0,-13.5)
+
+	surface.name = 'lineBasketball';
+
+	group.add(surface)
 
 	points = [];
 
-	points.push(11,0,-16);
-	points.push(11,0,-17);
+	points.push(11,0,-13);
+	points.push(11,0,-14);
 
 	geometry = new LineGeometry();
 
@@ -674,36 +765,8 @@ function drawHashBottom(group){
 
 	points = [];
 
-	points.push(14,0,-16);
-	points.push(14,0,-17);
-
-	geometry = new LineGeometry();
-
-	geometry.setPositions(points);
-
-	line = new Line2(geometry, material);
-	line._id = "lineBasketball"
-
-	group.add( line )
-
-	points = [];
-
-	points.push(0,0,-19);
-	points.push(0.7,0,-19);
-
-	geometry = new LineGeometry();
-
-	geometry.setPositions(points);
-
-	line = new Line2(geometry, material);
-	line._id = "lineBasketball"
-
-	group.add( line )
-
-	points = [];
-
-	points.push(0,0,3);
-	points.push(0.7,0,3);
+	points.push(14,0,-13);
+	points.push(14,0,-14);
 
 	geometry = new LineGeometry();
 

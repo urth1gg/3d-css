@@ -319,7 +319,7 @@ input:checked + .slider:before {
 	overflow:scroll;
 	height:calc( 105px * 6);
 	top:50px;
-	left:50%;
+	left:-60px;
 	transform:translate(-50%);
 	z-index:999;
 	width:280px;
@@ -523,9 +523,26 @@ img{
 }
 
 .threeJS-container{
-	width:calc(100% - 40vw);
 	height:100vh;
 	margin:0 auto;
+}
+input.zoomLevel{
+	position: absolute;
+	left:20%;
+	top:3%;
+	pointer-events:none;
+}
+
+button.ga-fences{
+	width:150px;
+	margin:0 auto;
+	padding:8px;
+	background: #00669B;
+	color:white;
+	border:0;
+	outline:0;
+	display: block;
+	cursor:pointer;
 }
 
 canvas{

@@ -112,7 +112,7 @@ export function renderBorderAndSurface(w,l, init){
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
 		surface._id = 'surface';
-
+		surface.name = "surface"
 		const borderMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff, side: THREE.DoubleSide, reflectivity: 1} );
 		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
 		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
