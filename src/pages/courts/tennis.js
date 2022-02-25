@@ -422,7 +422,7 @@ export default function Tennis(){
 			let percentage = (distance-minDistance)/range;
 
 			if(percentage !== prevZoom.current){
-				setZoomLevel(60 * (1-percentage) )
+				setZoomLevel((1-percentage) * 100)
 			}
 
 			prevZoom.current = percentage;
@@ -440,10 +440,6 @@ export default function Tennis(){
 		let length = defaultLength
 		let width = defaultWidth 
 
-		if(lights[1] === 1){
-
-		}
-
 		renderLight(lights, defaultWidth, defaultLength)
 	}, [lights])
 
@@ -451,10 +447,11 @@ export default function Tennis(){
 		if(!window.scene) return;
 
 		changeBasketballLinesPositions(basketballLines, defaultWidth, defaultLength)
-		changeFencePositions(defaultWidth, defaultLength)
+		renderFence(fences, defaultWidth, defaultLength)
 		changeLightPositions(defaultWidth, defaultLength)
 		renderBorderAndSurface(defaultWidth, defaultLength);
 
+		if(galleryFencesUsed) { renderGallery(!galleryFencesUsed) }
 		window.renderer.render(window.scene, window.camera);
 
 	}, [defaultWidth, defaultLength])
@@ -527,7 +524,20 @@ export default function Tennis(){
 					</div>
 				</div>
 
-				<input type="range" min={0} max={60} value={zoomLevel} onChange={f => f} className="zoomLevel"/>
+				<div className="zoomContainer">
+					<p>Zoom: {zoomLevel.toFixed(2)}%</p>
+					<div className="zoomLevel" style={{cursor:'pointer'}}>
+						<i className="fas fa-plus-circle" onClick={() => {
+							window.controls.dIn(0.95)
+							window.controls.update()
+						}}></i>
+						<i style={{cursor:'pointer'}} className="fas fa-minus-circle" onClick={() => {
+							window.controls.dIn(1.05)
+							window.controls.update()
+						}}></i>
+					</div>
+				</div>
+
 				<div className='threeJS-container'>
 				</div>
 

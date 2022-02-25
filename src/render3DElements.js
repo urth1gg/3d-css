@@ -569,15 +569,16 @@ export function renderFence(array,width,length){
 		length -= 2
 	}
 	loadFence((fbx) => {
-		if(array[1] === 1 && !fencesPositions['left'] ) { renderFenceLeft(fbx,width,length); fencesPositions['left'] = true }
-		if(array[0] === 1 && !fencesPositions['top'] ) { renderFenceTop(fbx, width, length); fencesPositions['top'] = true }
-		if(array[3] === 1 && !fencesPositions['bottom'] ) { renderFenceBottom(fbx, width, length); fencesPositions['bottom'] = true }
-		if(array[2] === 1 && !fencesPositions['right'] ) { renderFenceRight(fbx, width, length); fencesPositions['right'] = true }
 
-		if(array[1] === 0 && fencesPositions['left'] ) { removeFenceLeft(); fencesPositions['left'] = false }
-		if(array[0] === 0 && fencesPositions['top'] ) { removeFenceTop(); fencesPositions['top'] = false }
-		if(array[3] === 0 && fencesPositions['bottom'] ) { removeFenceBottom(); fencesPositions['bottom'] = false }
-		if(array[2] === 0 && fencesPositions['right'] ) { removeFenceRight(); fencesPositions['right'] = false }
+		removeFenceLeft()
+		removeFenceTop()
+		removeFenceBottom()
+		removeFenceRight()
+		
+		if(array[1] === 1 ) { renderFenceLeft(fbx,width,length) }
+		if(array[0] === 1 ) { renderFenceTop(fbx, width, length) }
+		if(array[3] === 1 ) { renderFenceBottom(fbx, width, length) }
+		if(array[2] === 1 ) { renderFenceRight(fbx, width, length) }
 
 		window.renderer.render(window.scene, window.camera)
 	})
