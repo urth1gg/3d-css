@@ -11,9 +11,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { extend } from "@react-three/fiber";
 import { renderBasketball, removeBasketball, changeBasketballLinesPositions } from "../../renderBasketball";
-import { renderTennis, renderBorderAndSurface } from "../../renderTennis";
+import { renderTennis, renderBorderAndSurface, renderBorder, removeBorder } from "../../renderTennis";
 import { renderPickleball, renderTwoPickleBallCourts } from "../../renderPickleball";
 import hexToRgb from "../../helpers/hexToRgb";
+import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 
@@ -145,7 +146,14 @@ export default function Tennis(){
 		}
 
 		if(label === 'border'){
-			setBorderColor(color)
+			if(color === ''){
+				removeBorder()
+				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
+
+			}else{
+				setBorderColor(color)
+				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
+			}
 		}
 
 		if(label === 'tennis_line'){
@@ -171,7 +179,7 @@ export default function Tennis(){
 	}
 
 	function changeSurfaceColor(color){
-		let surface = scene.current.children.filter(x => x._id === 'surface');
+		let surface = scene.current.children.filter(x => x.name === 'surface');
 
 		if(surface.length === 0) return;
 
@@ -181,17 +189,19 @@ export default function Tennis(){
 	}
 
 	function changeBorderColor(color){
-		let border = scene.current.children.filter(x => x._id === 'border');
+		let border = scene.current.children.filter(x => x.name === 'border');
 
-		if(border.length === 0) return; 
+		if(border.length === 0) {
+			renderBorder(defaultWidth, defaultLength, color)
+		}else{
+			let _color = hexToRgb(color)
 
-		let _color = hexToRgb(color)
-
-		border[0].material.color = _color
+			border[0].material.color = _color
+		}
 	}
 
 	function changeTennisSurfaceColor(color){
-		let plane = scene.current.children.filter(x => x._id === 'plane');
+		let plane = scene.current.children.filter(x => x.name === 'plane');
 
 		if(plane.length === 0) return;
 
@@ -359,11 +369,10 @@ export default function Tennis(){
 		renderer.current.setSize( window.innerWidth, window.innerHeight );
 		//renderer.current.setClearColor( 0xffffff, 0, 0);
 		renderer.current.setPixelRatio( window.devicePixelRatio );
-		//renderer.current.toneMapping = THREE.ReinhardToneMapping;
+		//renderer.current.toneMapping = THREE.LinearToneMapping
 		//renderer.current.toneMappingExposure = 2.3;
 		//renderer.current.shadowMap.enabled = true;
 		if(document.querySelector(".threeJS-container")) document.querySelector(".threeJS-container").appendChild( renderer.current.domElement );
-
 
 		camera.current = new THREE.PerspectiveCamera( 12, window.innerWidth / window.innerHeight, 2, 1600 );
 		camera.current.position.set(43.60292714932831, 93.06104139037603, 111.10822453090113 );
@@ -403,6 +412,8 @@ export default function Tennis(){
 
 		controls.addEventListener( 'change', (e,a) => {
 
+			renderer.current.autoClear = true;
+
 			let { minDistance, maxDistance } = controls;
 			let distance = controls.getDistance();
 
@@ -426,21 +437,11 @@ export default function Tennis(){
 	useEffect( () => {
 		if(!window.scene) return;
 
-		let spotLight = new THREE.SpotLight(0xffa95c, 1);
-		spotLight.castShadow = true;
-		spotLight.shadow.bias = -0.0001;
-		spotLight.shadow.mapSize.width = 1024*10
-		spotLight.shadow.mapSize.height = 1024*10
-		spotLight.position.set(25,65,0)
+		let length = defaultLength
+		let width = defaultWidth 
 
+		if(lights[1] === 1){
 
-		spotLight.name = "spotLightEffect"
-
-		if(lights.some(x => x === 1)){
-			if(window.scene.children.every(x => x.name !== 'spotLightEffect')) scene.current.add(spotLight)
-			//scene.current.add(spotLight)
-		}else{
-			window.scene.children = window.scene.children.filter(x => x.name !== 'spotLightEffect')
 		}
 
 		renderLight(lights, defaultWidth, defaultLength)
@@ -520,7 +521,7 @@ export default function Tennis(){
 								<button className="ga-fences" onClick={() => {
 									renderGallery(galleryFencesUsed)
 									setGalleryFencesUsed(!galleryFencesUsed)
-								}}>Use {!galleryFencesUsed ? 'gallery' : 'regular'} fences</button>
+								}}>Use {!galleryFencesUsed ? 'Gallery' : 'Standard'} Fence ({!galleryFencesUsed ? '4ft' : '10ft'})</button>
 							</label>
 						}
 					</div>
@@ -537,13 +538,19 @@ export default function Tennis(){
 
 							<div className="column-direction">
 								<label>Surface</label>
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="surface" cc={type !== 'Laykold acrylic coating' ? "#3b68b1" : "#0082ca"}/>
+								<ColorPicker type={type} 
+								onChange={onChange} 
+								label="surface" 
+								cc={type !== 'Laykold acrylic coating' ? "#3b68b1" : "#0082ca"}
+								w={defaultWidth}
+								l={defaultLength}
+								/>
 							</div>
 
 							<div className="column-direction">
 								<label>Border</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="border" cc="#ffffff" />
+								<ColorPicker w={defaultWidth} l={defaultLength} type={type} onChange={onChange} noColor={true} name="border" label="border" cc="#ffffff" />
 							</div>
 						</div>
 
@@ -557,7 +564,7 @@ export default function Tennis(){
 							<div className="column-direction">
 								<label>Tennis surface</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_surface" cc={type !== 'Laykold acrylic coating' ? "#ff6632":"#013ca6"}/>
+								<ColorPicker type={type} onChange={onChange} label="tennis_surface" cc={type !== 'Laykold acrylic coating' ? "#ff6632":"#013ca6"}/>
 							</div>
 						</div>
 					</div>

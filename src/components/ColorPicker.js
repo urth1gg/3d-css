@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import { removeBorder } from "../renderTennis";
+import { changeFencePositions } from "../render3DElements";
 
 //((?<=(\:+\s))(\#.+(?="))) 
 
-export default function ColorPicker({type, additionalOptions, onChange, label, addWhite, cc, cc2}){
+export default function ColorPicker({type, additionalOptions, onChange, label, addWhite, cc, cc2, noColor,w,l,name}){
 	const [showColors, setShowColors ] = useState(false)
 	const [ colors, setColors ] = useState([])
 	const [colorNames, setColorNames] = useState([])
@@ -180,9 +181,21 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 					<div className={typeOption === 'surface' ? 'selected' : ''} onClick={(e) => changeTypeOptionHandler(e,'surface')}>Surface</div>
 					<div className={typeOption === 'lines' ? 'selected' : ''} onClick={(e) => changeTypeOptionHandler(e,'lines')}>Lines</div>
 				</div>}
+				{noColor && 
+					<div className="color-wrapper" onClick={() => {
+						setCurrentColor('','')
+					}}>
+						<div className="color-container" style={{border: '1px solid black', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+							<i class="fas fa-ban" style={{fontSize: '55px', color: 'red'}}></i>
+						</div>
+						<h4 className='stroke' style={{color:'red'}}>No color</h4>
+					</div>
+				}
 				{colors.map( (x,i,arr) => {
 					return (
-					<div className="color-wrapper" onClick={() => setCurrentColor(x, colorNames[i])} key={x}>
+					<div className="color-wrapper" onClick={() => {
+						setCurrentColor(x, colorNames[i])
+					}} key={x}>
 						<div className="color-container" style={{backgroundColor: x, border:'1px solid black'}}></div>
 						<h4 className={x === '#ffffff' ? 'stroke-black' : 'stroke'} style={{color:x}}>{colorNames[i]}</h4>
 					</div>
@@ -192,7 +205,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 			</div>
 
 			<div className="picked-colors-container">
-				<div id={label} data-color={currentColor.toString()} className={currentColor ? 'visible' : 'hidden'} style={{backgroundColor: currentColor, height:'25px', width:'25px', marginTop:'15px'}}>
+				<div id={label} data-color={currentColor ? currentColor.toString() : ''} className={currentColor ? 'visible' : 'hidden'} style={{backgroundColor: currentColor, height:'25px', width:'25px', marginTop:'15px'}}>
 
 				</div>
 
@@ -201,7 +214,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 				</div>}
 			</div>
 
-			<input type="hidden" id={label} value={currentColor.toString()} />
+			<input type="hidden" id={label} value={currentColor ? currentColor.toString() : ''} />
 			{ additionalOptions && <input type="hidden" id={label+"_lines"} value={currentColorLines.toString()} /> }
 		</>
 	)

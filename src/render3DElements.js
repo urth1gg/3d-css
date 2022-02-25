@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import addSpotlight from "./helpers/addSpotlight"
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'
@@ -109,27 +110,27 @@ function loadNet(cb){
 }
 
 function removeLightLeftBottom(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightLeftBottom');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightLeftBottom' && x.name !== 'spBottomLeft');
 }
 
 function removeLightLeftTop(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightLeftTop');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightLeftTop' && x.name !== 'spTopLeft');
 }
 
 function removeLightTopMiddle(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightTopMiddle');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightTopMiddle' && x.name !== 'spTopMiddle');
 }
 
 function removeLightBottomMiddle(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightBottomMiddle');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightBottomMiddle' && x.name !== 'spBottomMiddle');
 }
 
 function removeLightTopRight(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightTopRight');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightTopRight' && x.name !== 'spTopRight');
 }
 
 function removeLightBottomRight(){
-	window.scene.children = window.scene.children.filter(x => x.name !== 'lightBottomRight');
+	window.scene.children = window.scene.children.filter(x => x.name !== 'lightBottomRight' && x.name !== 'spBottomRight');
 }
 
 window.generateBox = function(){
@@ -251,6 +252,8 @@ function renderLightLeftBottom(light, width, length){
 	light.position.z = (width-2-27)/2+3
 	light.name = 'lightLeftBottom'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: light.position.x, y: 1, z: -18}, 'spBottomLeft')
+
 }
 
 function renderLightLeftTop(light, width, length){
@@ -262,6 +265,7 @@ function renderLightLeftTop(light, width, length){
 	light.position.z = -27-(width-2-27)/2-3
 	light.name = 'lightLeftTop'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: light.position.x, y: 1, z: -18}, 'spTopLeft')
 }
 
 function renderLightTopMiddle(light, width, length){
@@ -269,10 +273,12 @@ function renderLightTopMiddle(light, width, length){
 	light.scale.set(0.002,0.002,0.002)
 	light.rotation.y = Math.PI / 2 
 	let box = new THREE.Box3().setFromObject( light )
+	console.log(box)
 	light.position.x = -(length+2-78)/2+length/2 
 	light.position.z = -27-(width-2-27)/2 - 3
 	light.name = 'lightTopMiddle'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: 39, y:1, z:-18}, 'spTopMiddle')
 }
 
 function renderLightBottomMiddle(light, width, length){
@@ -284,6 +290,8 @@ function renderLightBottomMiddle(light, width, length){
 	light.position.z = (width-2-27)/2 + 3
 	light.name = 'lightBottomMiddle'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: light.position.x, y: 1, z: -18}, 'spBottomMiddle')
+
 }
 
 function renderLightTopRight(light, width, length){
@@ -295,6 +303,7 @@ function renderLightTopRight(light, width, length){
 	light.position.z = -27-(width-2-27)/2 - 3
 	light.name = 'lightTopRight'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: light.position.x, y: 1, z: -18}, 'spTopRight')
 }
 
 function renderLightBottomRight(light, width, length){
@@ -305,6 +314,8 @@ function renderLightBottomRight(light, width, length){
 	light.position.z = (width-2-27)/2 + 3
 	light.name = 'lightBottomRight'
 	window.scene.add(light)
+	addSpotlight(light.position, {x: light.position.x, y: 1, z: -18}, 'spBottomRight')
+
 }
 
 export function renderHoop(array, width, length){
@@ -551,6 +562,12 @@ function renderHoopBottomMiddle(model, width,length){
 export function renderFence(array,width,length){
 	if(!window.renderer) return;
 
+	let borderExists = window.scene.children.some(x => x.name === 'border')
+
+	if(!borderExists){
+		width -= 2
+		length -= 2
+	}
 	loadFence((fbx) => {
 		if(array[1] === 1 && !fencesPositions['left'] ) { renderFenceLeft(fbx,width,length); fencesPositions['left'] = true }
 		if(array[0] === 1 && !fencesPositions['top'] ) { renderFenceTop(fbx, width, length); fencesPositions['top'] = true }
@@ -595,10 +612,10 @@ function renderFenceLeft(fbx, width, length){
 	let currentWidth =  box.max.x - box.min.x
 	
 
-	let maxFences = Math.floor((width + 2) / 10);
-	let remainder = (width + 2) % 10
+	let maxFences = Math.floor((width + 2) / 20);
+	let remainder = (width + 2) % 20
 
-	let desiredWidth = 10 + (remainder / maxFences)
+	let desiredWidth = 20 + (remainder / maxFences)
 
 	let ratio = desiredWidth / currentWidth
 
@@ -633,10 +650,10 @@ function renderFenceTop(fbx, width, length){
 	var box = new THREE.Box3().setFromObject( one )
 	let currentLength =  box.max.x - box.min.x
 
-	let maxFences = Math.floor((length + 2) / 10);
-	let remainder = (length + 2) % 10
+	let maxFences = Math.floor((length + 2) / 20);
+	let remainder = (length + 2) % 20
 
-	let desiredLength = 10 + (remainder / maxFences)
+	let desiredLength = 20 + (remainder / maxFences)
 
 	let ratio = desiredLength / currentLength
 
@@ -669,10 +686,10 @@ function renderFenceBottom(fbx, width, length){
 	var box = new THREE.Box3().setFromObject( one )
 	let currentLength =  box.max.x - box.min.x
 
-	let maxFences = Math.floor((length + 2) / 10);
-	let remainder = (length + 2) % 10
+	let maxFences = Math.floor((length + 2) / 20);
+	let remainder = (length + 2) % 20
 
-	let desiredLength = 10 + (remainder / maxFences)
+	let desiredLength = 20 + (remainder / maxFences)
 
 	let ratio = desiredLength / currentLength
 
@@ -708,10 +725,10 @@ function renderFenceRight(fbx, width, length){
 	let currentWidth =  box.max.x - box.min.x
 	
 
-	let maxFences = Math.floor((width + 2) / 10);
-	let remainder = (width + 2) % 10
+	let maxFences = Math.floor((width + 2) / 20);
+	let remainder = (width + 2) % 20
 
-	let desiredWidth = 10 + (remainder / maxFences)
+	let desiredWidth = 20 + (remainder / maxFences)
 
 	let ratio = desiredWidth / currentWidth
 
@@ -740,15 +757,22 @@ export function changeFencePositions(width, length){
 	let fenceTop = window.scene.children.filter(x => x.name === 'fenceTop')
 	let fenceBottom = window.scene.children.filter(x => x.name === 'fenceBottom')
 
+	let borderExists = window.scene.children.some(x => x.name === 'border')
+
+	if(!borderExists){
+		width -= 2
+		length -= 2
+	}
+	
 	if(fenceLeft.length !== 0){
 		fenceLeft[0].position.x = -(length-78+2)/2
 		var box = new THREE.Box3().setFromObject( fenceLeft[0].children[0] )
 		let currentWidth =  box.max.z - box.min.z
 
-		let maxFences = Math.floor((width + 2) / 10);
-		let remainder = (width + 2) % 10
+		let maxFences = Math.floor((width + 2) / 20);
+		let remainder = (width + 2) % 20
 
-		let desiredWidth = 10 + (remainder / maxFences)
+		let desiredWidth = 20 + (remainder / maxFences)
 
 		let ratio = desiredWidth / currentWidth
 
@@ -775,10 +799,10 @@ export function changeFencePositions(width, length){
 		var box = new THREE.Box3().setFromObject( fenceRight[0].children[0] )
 		let currentWidth =  box.max.z - box.min.z
 
-		let maxFences = Math.floor((width + 2) / 10);
-		let remainder = (width + 2) % 10
+		let maxFences = Math.floor((width + 2) / 20);
+		let remainder = (width + 2) % 20
 
-		let desiredWidth = 10 + (remainder / maxFences)
+		let desiredWidth = 20 + (remainder / maxFences)
 
 		let ratio = desiredWidth / currentWidth
 
@@ -805,10 +829,10 @@ export function changeFencePositions(width, length){
 		var box = new THREE.Box3().setFromObject( fenceTop[0].children[0] )
 		let currentLength =  box.max.x - box.min.x
 
-		let maxFences = Math.floor((length + 2) / 10);
-		let remainder = (length + 2) % 10
+		let maxFences = Math.floor((length + 2) / 20);
+		let remainder = (length + 2) % 20
 
-		let desiredLength = 10 + (remainder / maxFences)
+		let desiredLength = 20 + (remainder / maxFences)
 
 		let ratio = desiredLength / currentLength
 
@@ -835,10 +859,10 @@ export function changeFencePositions(width, length){
 		var box = new THREE.Box3().setFromObject( fenceBottom[0].children[0] )
 		let currentLength =  box.max.x - box.min.x
 
-		let maxFences = Math.floor((length + 2) / 10);
-		let remainder = (length + 2) % 10
+		let maxFences = Math.floor((length + 2) / 20);
+		let remainder = (length + 2) % 20
 
-		let desiredLength = 10 + (remainder / maxFences)
+		let desiredLength = 20 + (remainder / maxFences)
 
 		let ratio = desiredLength / currentLength
 
@@ -950,22 +974,87 @@ export function renderGallery(type){
 	if(fenceBottom.length !== 0){
 		let children = [ ...fenceBottom[0].children ]
 		children.pop();
-		children.shift();
+		let first = children.shift();
 
-		children.forEach(x => {
-			x.scale.y = !type ? 0.5 : 0.9;
+		let postRight = first.children.filter(x => x.name === 'pCube3')[0]
+		let box = new THREE.Box3().setFromObject( postRight );
+
+		console.log(box)
+		let desiredHeight = box.max.y - box.min.y
+
+		children.forEach(async (x,i) => {
+			let factor = !type ? 0.5 : 0.9;
+			await x.scale.set(x.scale.x, factor, x.scale.z)	
+			
+			let item = x.children.filter(x => x.name === 'pCube3')[0]
+			let box = generateBox(x)
+			
+			console.log(box)
+			if(i === children.length - 1){
+				let lastOne = x.children.filter(x => x.name === 'pCube3')[0]
+				let lastOneBox = generateBox(lastOne)
+
+				let currentHeight = lastOneBox.max.y - lastOneBox.min.y;
+
+				if(!type){
+					lastOne.translateY(desiredHeight - currentHeight)
+					lastOne.scale.y *= desiredHeight / currentHeight	
+				}else{
+					lastOne.scale.y *= desiredHeight / currentHeight
+					lastOne.translateY(postRight.position.y - lastOne.position.y)
+				}
+
+				window.renderer.render(window.scene, window.camera)
+
+				//lastOne.position.y += (desiredHeight - currentHeight )
+				//lastOne.updateMatrix()
+
+			}
 		})
-	}
 
+	}
 	if(fenceTop.length !== 0){
 		let children = [ ...fenceTop[0].children ]
 		children.pop();
-		children.shift();
+		let first = children.shift();
 
-		children.forEach(x => {
-			x.scale.y = !type ? 0.5 : 0.9;
+		let postRight = first.children.filter(x => x.name === 'pCube1')[0]
+		let box = new THREE.Box3().setFromObject( postRight );
+		let desiredHeight = box.max.y - box.min.y
+
+		children.forEach( async (x,i) => {
+			let factor = !type ? 0.5 : 0.9;
+			await x.scale.set(x.scale.x, factor, x.scale.z)
+
+			let item = x.children.filter(x => x.name === 'pCube1')[0]
+			let box = generateBox(item)
+			
+			if(i === 0){
+				let lastOne = x.children.filter(x => x.name === 'pCube1')[0]
+				let lastOneBox = generateBox(lastOne)
+
+				let currentHeight = lastOneBox.max.y - lastOneBox.min.y;
+
+				console.log(desiredHeight)
+				console.log(currentHeight)
+				if(!type){
+					lastOne.translateY(desiredHeight - currentHeight)
+					lastOne.scale.y *= desiredHeight / currentHeight	
+				}else{
+					lastOne.scale.y *= desiredHeight / currentHeight
+					lastOne.translateY(postRight.position.y - lastOne.position.y)
+				}
+
+				window.renderer.render(window.scene, window.camera)
+			}			
 		})
 	}
 
 	window.renderer.render(window.scene, window.camera)
 }
+
+function generateBox(el){
+	return new THREE.Box3().setFromObject(el)
+}
+
+window.generateBox = generateBox

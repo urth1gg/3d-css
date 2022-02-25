@@ -62,7 +62,7 @@ export function renderTennis(renderer, scene, camera, material, w = 60, l = 120)
 		line4._id = "line";
 
 		const _geometry = new THREE.PlaneGeometry( 27, 78);
-		const _material = new THREE.MeshLambertMaterial( {color: 0x013CA6, side: THREE.DoubleSide, reflectivity: 1 } );
+		const _material = new THREE.MeshStandardMaterial( {color: 0x013CA6, side: THREE.DoubleSide, reflectivity: 1 } );
 		//const _material = new THREE.MeshBasicMaterial( {color: 0x013CA6, side: THREE.DoubleSide} );
 		const plane = new THREE.Mesh( _geometry, _material );
 		plane.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
@@ -86,13 +86,13 @@ function removeExistingBorderAndSurface(){
 	let prevBorder;
 	let prevSurface;
 
-	if(window.scene.children.filter(x => x._id === 'surface').length !== 0){
-		prevSurface = window.scene.children.filter(x => x._id === 'surface')[0]
-		window.scene.children = window.scene.children.filter(x => x._id !== 'surface')
+	if(window.scene.children.filter(x => x.name === 'surface').length !== 0){
+		prevSurface = window.scene.children.filter(x => x.name === 'surface')[0]
+		window.scene.children = window.scene.children.filter(x => x.name !== 'surface')
 	}
 
-	if(window.scene.children.filter(x => x._id === 'border').length !== 0){
-		prevBorder = window.scene.children.filter(x => x._id === 'border')[0]
+	if(window.scene.children.filter(x => x.name === 'border').length !== 0){
+		prevBorder = window.scene.children.filter(x => x.name === 'border')[0]
 		window.scene.children = window.scene.children.filter(x => x._id !== 'border')
 	}
 
@@ -107,36 +107,52 @@ export function renderBorderAndSurface(w,l, init){
 	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
 	if(init){
 
-		const backgroundMaterial = new THREE.MeshLambertMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
+		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
 		surface._id = 'surface';
-		surface.name = "surface"
-		const borderMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff, side: THREE.DoubleSide, reflectivity: 1} );
-		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
-		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
-		border.position.set(39.2, -0.03, -13.57);
-		border._id = 'border';
+		surface.name = "surface";
 
 		window.scene.add(surface)
-		window.scene.add(border)
 	}else{
 		const backgroundMaterial = prevSurface.material;
-		const borderMaterial = prevBorder.material
-
+		
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
 		surface._id = 'surface';
-
-		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
-		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
-		border.position.set(39.2, -0.03, -13.57);
-		border._id = 'border';
-
+		surface.name = 'surface';
+		
 		window.scene.add(surface)
-		window.scene.add(border)
+		if(prevBorder){
+			const borderMaterial = prevBorder.material
+
+			const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+			border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+			border.position.set(39.2, -0.03, -13.57);
+			border.name = 'border'
+			border._id = "border"
+			window.scene.add(border)
+		}
 
 	}
+}
+
+export function removeBorder(){
+	window.scene.children = window.scene.children.filter( x => x.name !== 'border')
+	window.renderer.render(window.scene, window.camera)
+}
+
+export function renderBorder(w,l, color){
+
+	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
+	const borderMaterial = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide, reflectivity: 1} );
+	const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+	border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+	border.position.set(39.2, -0.03, -13.57);
+	border._id = 'border';
+	border.name = 'border';
+
+	window.scene.add(border)
 }

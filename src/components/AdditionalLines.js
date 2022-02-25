@@ -218,12 +218,12 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 		<div className="img-cont left-right">
 			<div className="lines-colorpicker-container">
 				<img onClick={onClickBasketball} data-pos={-1} src={basketballLines.includes(1) ? "/static/assets/images/basketball-court-full.svg" : "/static/assets/images/basketball-court.svg"} title="Basketball" alt="basketball" />
-				<ColorPicker additionalOptions={true} label="basketball" onChange={onChange} type={type} cc2="#ffffff" />
+				<ColorPicker additionalOptions={true} label="basketball" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
 			</div>
 
 			<div className="lines-colorpicker-container">
 				{renderImage()}
-				<ColorPicker additionalOptions={true} label="pickleball" onChange={onChange} type={type} cc2="#ffffff" />
+				<ColorPicker additionalOptions={true} label="pickleball" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
 			</div>
 
 			{showPickleballSelector && 
