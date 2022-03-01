@@ -10,8 +10,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { extend } from "@react-three/fiber";
-import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBorderAndSurface, renderBasketballLines } from "../../renderBasketball";
-import { renderTennis, renderBorder, removeBorder } from "../../renderTennis";
+import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBorderAndSurface, renderBorder, renderBasketballLines } from "../../renderBasketball";
+import { renderTennis, removeBorder } from "../../renderTennis";
 import { renderPickleball, renderTwoPickleBallCourts } from "../../renderPickleball";
 import hexToRgb from "../../helpers/hexToRgb";
 import addSpotlight from "../../helpers/addSpotlight";
@@ -428,7 +428,8 @@ export default function Tennis(){
 			prevZoom.current = percentage;
 			renderer.current.render(scene.current, camera.current)
 		} );
-		renderBasketballLines(defaultWidth, defaultLength)
+
+		renderBasketballLines(defaultWidth, defaultLength, true)
 
 		renderer.current.render(scene.current, camera.current)
 
@@ -450,10 +451,11 @@ export default function Tennis(){
 		changeBasketballLinesPositions(basketballLines, defaultWidth, defaultLength)
 		renderFence(fences, defaultWidth, defaultLength)
 		changeLightPositions(defaultWidth, defaultLength)
-		renderBorderAndSurface(defaultWidth, defaultLength);
+		renderBorderAndSurface(defaultWidth, defaultLength)
+		renderBasketballLines(defaultWidth, defaultLength)
 
 		if(galleryFencesUsed) { renderGallery(!galleryFencesUsed) }
-		window.renderer.render(window.scene, window.camera);
+		window.renderer.render(window.scene, window.camera)
 
 	}, [defaultWidth, defaultLength])
 

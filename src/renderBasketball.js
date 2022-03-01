@@ -62,7 +62,7 @@ export function renderBorderAndSurface(w,l, init){
 	let [ prevSurface, prevBorder ] = removeExistingBorderAndSurface();
 
 	const backgroundGeometry = new THREE.PlaneGeometry(w, l);
-	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
+	const borderGeometry = new THREE.PlaneGeometry(w + 12, l + 12 )
 	if(init){
 
 		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
@@ -794,7 +794,7 @@ function drawBaseLine(group){
 	group.add( line )
 }
 
-function renderOutsideLines(w,l, group){
+function renderOutsideLines(w,l, group, init, shouldRenderMiddlePart){
 	let points = [];
 
 	let offsetZ = 13.57
@@ -841,7 +841,9 @@ function renderOutsideLines(w,l, group){
 
 	group.add(new Line2(geometry, material))
 
-	renderMiddleLine(w,l,offsetX,offsetZ)
+	if(init || shouldRenderMiddlePart){
+		renderMiddleLine(w,l,offsetX,offsetZ)
+	}
 }
 
 export function renderMiddleLine(w,l, offsetX, offsetZ){
@@ -880,14 +882,31 @@ export function renderMiddleLine(w,l, offsetX, offsetZ){
 	window.scene.add(group)
 }
 
-export function renderBasketballLines(w,l){
+export function renderBasketballLines(w,l, init){
 	let group = new THREE.Group();
 
+	let shouldRenderMiddlePart = window.scene.children.some(x => x.name === 'middleLine');
+
+	window.scene.children = window.scene.children.filter(x => x.name !== 'basketballOutsideLines' && x.name !== 'middleLine')
+
 	group.name = "basketballOutsideLines"
-	renderOutsideLines(w,l, group)
+	renderOutsideLines(w,l, group, init, shouldRenderMiddlePart)
 
 	console.log(group)
 	window.scene.add(group)
 	window.renderer.render(window.scene, window.camera)
+}
+
+export function renderBorder(w,l, color){
+
+	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
+	const borderMaterial = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide, reflectivity: 1} );
+	const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+	border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+	border.position.set(39.2, -0.03, -13.57);
+	border._id = 'border';
+	border.name = 'border';
+
+	window.scene.add(border)
 }
 

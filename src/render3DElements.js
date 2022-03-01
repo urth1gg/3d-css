@@ -559,14 +559,14 @@ function renderHoopBottomMiddle(model, width,length){
 	window.scene.add(group)
 }
 
-export function renderFence(array,width,length){
+export function renderFence(array,width,length, num){
 	if(!window.renderer) return;
 
 	let borderExists = window.scene.children.some(x => x.name === 'border')
 
-	if(!borderExists){
-		width -= 2
-		length -= 2
+	if(!borderExists && !num){
+		width -= num || 2
+		length -= num || 2
 	}
 	loadFence((fbx) => {
 
@@ -749,7 +749,7 @@ function renderFenceRight(fbx, width, length){
 	window.scene.add(group)
 }
 
-export function changeFencePositions(width, length){
+export function changeFencePositions(width, length, num){
 
 	if(!window.fence) return;
 
@@ -760,9 +760,9 @@ export function changeFencePositions(width, length){
 
 	let borderExists = window.scene.children.some(x => x.name === 'border')
 
-	if(!borderExists){
-		width -= 2
-		length -= 2
+	if(!borderExists && !num){
+		width -= num || 2
+		length -= num || 2
 	}
 	
 	if(fenceLeft.length !== 0){

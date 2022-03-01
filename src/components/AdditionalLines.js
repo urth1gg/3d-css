@@ -44,9 +44,9 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 			_lines[pos] = 0;
 		}
 
-		if(!_lines[1] && isBasketball){
+		if(basketballLines[1] === 1 && isBasketball){
 			renderMiddleLine(defaultWidth, defaultLength, defaultLength/2 - 39.2, 13.57)
-		}else if(_lines[1] === 0 && isBasketball){
+		}else if(basketballLines[1] === 0 && isBasketball){
 			window.scene.children = window.scene.children.filter(x => x.name !== 'middleLine')
 		}
 

@@ -71,7 +71,11 @@ const Animated = () => {
 	}, [])
 	return(
 		<div className="loading-container">
-			<img src="https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg" width="100" />
+			<div>
+				<img src="https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg" width="100" />
+				<img style={{marginLeft:'15px'}} src="//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396" width="150px" />
+			</div>
+		
 			<div className="animation-parent">
 				<div className="horizontal-line anim-pos-1"></div>
 				<div className="horizontal-line anim-pos-1 index-1" style={{width: width1}} ></div>
