@@ -591,6 +591,7 @@ export default function Tennis(){
 								setBasketballLines={setBasketballLines}
 								type={type}
 								excludePositions={{3: true, 4: true}}
+								isBasketball={true}
 							/>
 						</div>
 
@@ -605,6 +606,7 @@ export default function Tennis(){
 								length={defaultLength} 
 								hoopsDefault={[0,1,1,0,0]}
 								excludePositions={{3: true, 4: true}}
+								isBasketball={true}
 							/>
 						</div>
 

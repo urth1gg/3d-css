@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { renderHoop, renderNet, changeHoopPositions } from "../render3DElements";
 import { renderMiddleLine } from "../renderBasketball";
 
-function Switcher({name, imgName, width, length, hoopsDefault, excludePositions}){
+function Switcher({name, imgName, width, length, hoopsDefault, excludePositions, isBasketball}){
 
 	let [ checked, setChecked ] = useState(false)
 	let [ hoops, setHoops ] = useState([0,0,0,0,0])
@@ -38,12 +38,12 @@ function Switcher({name, imgName, width, length, hoopsDefault, excludePositions}
 			_hoops[pos] = 0;
 		}
 
-		if(hoops[0] === 1){
+		if(hoops[0] === 1 && isBasketball){
 			let offsetZ = 13.57
 			let offsetX = length/2 - 39.2
 
 			renderMiddleLine(width,length, offsetX, offsetZ)
-		}else{
+		}else if(hoops[0] === 0 && isBasketball){
 			window.scene.children = window.scene.children.filter(x => x.name !== 'middleLine')
 		}
 		setHoops([..._hoops]);
@@ -76,6 +76,7 @@ function Switcher({name, imgName, width, length, hoopsDefault, excludePositions}
 	}, [hoops])
 
 	useEffect( () => {
+		if(!hoopsDefault) return;
 		setHoops([...hoopsDefault])
 	}, [])
 

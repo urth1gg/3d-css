@@ -457,7 +457,7 @@ input:checked + .slider:before {
 	position: absolute;
 	left:80%;
 	transform:translateX(-50%);
-	top:25px;
+	bottom:-2px;
 }
 
 img{

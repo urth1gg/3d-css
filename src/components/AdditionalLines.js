@@ -4,7 +4,7 @@ import hexToRgb from "../helpers/hexToRgb";
 import { renderBasketball, removeBasketball, renderMiddleLine } from "../renderBasketball";
 import { renderPickleball, renderTwoPickleBallCourts, removePickleballFromScreen } from "../renderPickleball";
 
-export default function AdditionalLines({defaultWidth, defaultLength, basketballLines, setBasketballLines, type, excludePositions}){
+export default function AdditionalLines({defaultWidth, defaultLength, basketballLines, setBasketballLines, type, excludePositions,isBasketball}){
 	let [ lines, setLines ] = useState([0,0]);
 	let [ showPickleballSelector, setShowPickleballSelector ] = useState(false);
 	let [ showBasketballSelector, setShoBasketballSelector ] = useState(false);
@@ -44,9 +44,9 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 			_lines[pos] = 0;
 		}
 
-		if(!_lines[1]){
+		if(!_lines[1] && isBasketball){
 			renderMiddleLine(defaultWidth, defaultLength, defaultLength/2 - 39.2, 13.57)
-		}else{
+		}else if(_lines[1] === 0 && isBasketball){
 			window.scene.children = window.scene.children.filter(x => x.name !== 'middleLine')
 		}
 
@@ -208,8 +208,6 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 			renderBasketball(x, defaultWidth, defaultLength)
 		})
 
-		console.log(arr)
-		console.log(window.renderer)
 		if(!window.renderer) return;
 		window.renderer.render(window.scene, window.camera)
 	}, [basketballLines])

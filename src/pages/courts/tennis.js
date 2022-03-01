@@ -589,6 +589,7 @@ export default function Tennis(){
 								basketballLines={basketballLines} 
 								setBasketballLines={setBasketballLines}
 								type={type}
+								excludePositions={[]}
 							/>
 						</div>
 
@@ -596,7 +597,7 @@ export default function Tennis(){
 
 					<div className="mtop-1" style={{width:'85%'}}>
 						<div className="options align-center left-right relative">
-							<Switcher name="Hoops" imgName="hoop" width={defaultWidth} length={defaultLength} />
+							<Switcher name="Hoops" imgName="hoop" width={defaultWidth} length={defaultLength} excludePositions={[]}/>
 						</div>
 
 						<div className="options align-center left-right relative">
