@@ -274,7 +274,7 @@ function renderLightTopMiddle(light, width, length){
 	light.rotation.y = Math.PI / 2 
 	let box = new THREE.Box3().setFromObject( light )
 	console.log(box)
-	light.position.x = -(length+2-78)/2+length/2 
+	light.position.x = -(length+2-78)/2+length/2 + 1 
 	light.position.z = -27-(width-2-27)/2 - 3
 	light.name = 'lightTopMiddle'
 	window.scene.add(light)

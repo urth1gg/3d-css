@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { renderHoop, renderNet, changeHoopPositions } from "../render3DElements";
+import { renderMiddleLine } from "../renderBasketball";
 
-function Switcher({name, imgName, width, length}){
+function Switcher({name, imgName, width, length, hoopsDefault, excludePositions}){
+
 	let [ checked, setChecked ] = useState(false)
 	let [ hoops, setHoops ] = useState([0,0,0,0,0])
 	let [ showSelect, setShowSelect ] = useState(false)
@@ -36,6 +38,14 @@ function Switcher({name, imgName, width, length}){
 			_hoops[pos] = 0;
 		}
 
+		if(hoops[0] === 1){
+			let offsetZ = 13.57
+			let offsetX = length/2 - 39.2
+
+			renderMiddleLine(width,length, offsetX, offsetZ)
+		}else{
+			window.scene.children = window.scene.children.filter(x => x.name !== 'middleLine')
+		}
 		setHoops([..._hoops]);
 	}
 
@@ -66,6 +76,10 @@ function Switcher({name, imgName, width, length}){
 	}, [hoops])
 
 	useEffect( () => {
+		setHoops([...hoopsDefault])
+	}, [])
+
+	useEffect( () => {
 		changeHoopPositions(width,length)
 	}, [width, length])
 	return(
@@ -80,19 +94,19 @@ function Switcher({name, imgName, width, length}){
 			<img src="/static/assets/images/tennis-court-full.png" className="bg-img-hoops" />
 			<div className="circular-position">
 
-				<div className="img-cont left-right">
-					<img className="img-select top" src={hoops[0] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={0} />
-					<img className="img-select top-middle" src={hoops[3] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={3} />
-				</div>
+				<img 
+					className="img-select top" 
+					src={hoops[0] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} 
+					onClick={onClickHoops} 
+					data-pos={0} 
+					style={excludePositions[3] ? {left: '50%'}: {}}
+				/>
+				{!excludePositions[3] && <img className="img-select top-middle" src={hoops[3] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={3} /> }
 
-				<div className="img-cont left-right">
-					<img className="img-select left" src={hoops[1] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={1} />
-					<img className="img-select right" src={hoops[2] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={2} />
-				</div>
+				<img className="img-select left" src={hoops[1] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={1} />
+				<img className="img-select right" src={hoops[2] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={2} />
 
-				<div className="img-cont left-right">
-					<img className="img-select bottom-middle" src={hoops[4] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={4} />
-				</div>
+				{!excludePositions[4] && <img className="img-select bottom-middle" src={hoops[4] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={4} />}
 			</div>
 		</div>}
 		</>

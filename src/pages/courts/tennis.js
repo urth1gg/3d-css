@@ -605,8 +605,25 @@ export default function Tennis(){
 					</div>
 
 					<div className="mtop-1">
-						<WidthSlider defaultValue={60} onChange={sliderOnChange}/>
-						<LongtitudeSlider defaultValue={120} onChange={sliderOnChange}/>
+						<WidthSlider defaultValue={60} onChange={sliderOnChange} marks={
+							[
+								{
+								value: 50,
+								label: '50 ft',
+								},
+								{
+								value: 70,
+								label: '70 ft',
+								}
+							]
+						}/>
+						<LongtitudeSlider defaultValue={120} onChange={sliderOnChange}
+							marks={
+								[
+									
+								]
+							}
+						/>
 					</div>
 
 				</div>

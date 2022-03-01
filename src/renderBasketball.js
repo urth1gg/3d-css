@@ -65,36 +65,34 @@ export function renderBorderAndSurface(w,l, init){
 	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
 	if(init){
 
-		const backgroundMaterial = new THREE.MeshLambertMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
+		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
 		surface._id = 'surface';
-
-		const borderMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff, side: THREE.DoubleSide, reflectivity: 1} );
-		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
-		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
-		border.position.set(39.2, -0.03, -13.57);
-		border._id = 'border';
+		surface.name = "surface";
 
 		window.scene.add(surface)
-		window.scene.add(border)
 	}else{
 		const backgroundMaterial = prevSurface.material;
-		const borderMaterial = prevBorder.material
-
+		
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
 		surface._id = 'surface';
-
-		const border = new THREE.Mesh ( borderGeometry, borderMaterial);
-		border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
-		border.position.set(39.2, -0.03, -13.57);
-		border._id = 'border';
-
+		surface.name = 'surface';
+		
 		window.scene.add(surface)
-		window.scene.add(border)
+		if(prevBorder){
+			const borderMaterial = prevBorder.material
+
+			const border = new THREE.Mesh ( borderGeometry, borderMaterial);
+			border.rotation.set( Math.PI / 2, 0, Math.PI / 2);
+			border.position.set(39.2, -0.03, -13.57);
+			border.name = 'border'
+			border._id = "border"
+			window.scene.add(border)
+		}
 
 	}
 }
@@ -794,5 +792,102 @@ function drawBaseLine(group){
 	line._id = "lineBasketball"
 
 	group.add( line )
+}
+
+function renderOutsideLines(w,l, group){
+	let points = [];
+
+	let offsetZ = 13.57
+	let offsetX = l/2 - 39.2
+	
+	points.push(-offsetX,0.01,(+w/2) - offsetZ);
+	points.push(-offsetX,0.01,(-w/2) - offsetZ);
+
+	let geometry = new LineGeometry();
+
+	let material = generateLinesMaterial()
+
+	geometry.setPositions(points);
+
+	let line = new Line2(geometry, material);
+	line.name = "lineBasketball"
+
+	group.add( line )
+
+	points = [];
+
+	points.push(-offsetX, 0.01, (+w/2) - offsetZ)
+	points.push(l - offsetX, 0.01, (+w/2) - offsetZ)
+	geometry = new LineGeometry()
+	geometry.setPositions(points)
+
+	group.add(new Line2(geometry, material))
+
+	points = [];
+
+	points.push(l-offsetX,0.01,(+w/2) - offsetZ);
+	points.push(l-offsetX,0.01,(-w/2) - offsetZ);
+	geometry = new LineGeometry()
+	geometry.setPositions(points)
+
+	group.add(new Line2(geometry, material))
+
+	points = [];
+
+	points.push(-offsetX, 0.01, (-w/2) - offsetZ + 0.25)
+	points.push(l - offsetX, 0.01, (-w/2) - offsetZ + 0.25)
+	geometry = new LineGeometry()
+	geometry.setPositions(points)
+
+	group.add(new Line2(geometry, material))
+
+	renderMiddleLine(w,l,offsetX,offsetZ)
+}
+
+export function renderMiddleLine(w,l, offsetX, offsetZ){
+	let group = new THREE.Group();
+	let material = generateLinesMaterial();
+	let points;
+	let geometry;
+
+	group.name = "middleLine"
+	points = [];
+
+	points.push(l/2-offsetX, 0.01, (-w/2) - offsetZ + 0.25)
+	points.push(l/2 - offsetX, 0.01, (+w/2) - offsetZ + 0.25)
+	geometry = new LineGeometry()
+	geometry.setPositions(points)
+
+	let middle = new Line2(geometry, material);
+	middle.name = "middleLine"
+	group.add(middle)
+
+	points = []
+
+	for(let i = 0; i <= 180; i++){
+        points.push(Math.sin(i*(Math.PI/90))*5,0.01, Math.cos(i*(Math.PI/90))*5);
+    }
+      
+    geometry = new LineGeometry();
+    geometry.setPositions( points );
+  
+	let circle = new Line2(geometry,material)
+	circle.position.x = l/2-offsetX
+	circle.position.z = 0 - offsetZ
+	circle.name = "middleLine"
+	group.add(circle)
+
+	window.scene.add(group)
+}
+
+export function renderBasketballLines(w,l){
+	let group = new THREE.Group();
+
+	group.name = "basketballOutsideLines"
+	renderOutsideLines(w,l, group)
+
+	console.log(group)
+	window.scene.add(group)
+	window.renderer.render(window.scene, window.camera)
 }
 

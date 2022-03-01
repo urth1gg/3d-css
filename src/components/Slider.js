@@ -13,23 +13,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const marks = [
-  {
-    value: 110,
-    label: '110 ft',
-  },
-  {
-    value: 130,
-    label: '130 ft',
-  }
-];
 
 function valuetext(value) {
   return `${value} ft`;
 }
 
 
-function LongtitudeSlider({defaultValue, onChange}) {
+function LongtitudeSlider({defaultValue, onChange, min, max, marks}) {
   const classes = useStyles();
 
   let [val, setVal] = useState(defaultValue)
@@ -50,8 +40,8 @@ function LongtitudeSlider({defaultValue, onChange}) {
         getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-custom"
         step={1}
-        max={130}
-        min={110}
+        max={max || 130}
+        min={min || 110}
         valueLabelDisplay="auto"
         marks={marks}
         onChange={_onChange}
@@ -60,18 +50,7 @@ function LongtitudeSlider({defaultValue, onChange}) {
   );
 }
 
-const marks2 = [
-  {
-    value: 50,
-    label: '50 ft',
-  },
-  {
-    value: 70,
-    label: '70 ft',
-  }
-];
-
-function WidthSlider({defaultValue, onChange}){
+function WidthSlider({defaultValue, onChange, min, max, marks}){
   const classes = useStyles();
 
   let [val, setVal] = useState(defaultValue)
@@ -92,11 +71,11 @@ function WidthSlider({defaultValue, onChange}){
         getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-custom"
         step={1}
-        min={50}
-        max={70}
+        min={min || 50}
+        max={max || 70}
         valueLabelDisplay="auto"
         onChange={_onChange}
-        marks={marks2}
+        marks={marks}
       />
     </div>
   );

@@ -10,11 +10,12 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { extend } from "@react-three/fiber";
-import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBasketballDefault } from "../../renderBasketball";
-import { renderTennis, renderBorderAndSurface } from "../../renderTennis";
+import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBorderAndSurface, renderBasketballLines } from "../../renderBasketball";
+import { renderTennis, renderBorder, removeBorder } from "../../renderTennis";
 import { renderPickleball, renderTwoPickleBallCourts } from "../../renderPickleball";
 import hexToRgb from "../../helpers/hexToRgb";
-import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions } from "../../render3DElements";
+import addSpotlight from "../../helpers/addSpotlight";
+import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 
 export default function Tennis(){
@@ -29,14 +30,17 @@ export default function Tennis(){
 	let [ tennisLineColor, setTennisLineColor ] = useState('#ffffff');
 	let [ tennisSurfaceColor, setTennisSurfaceColor ] = useState('#ffffff');
 	let [ defaultWidth, setDefaultWidth ] = useState(50)
-	let [ defaultLength, setDefaultLength ] = useState(94)
-	let [ basketballLines, setBasketballLines ] = useState([0,0,0,0,0])
+	let [ defaultLength, setDefaultLength ] = useState(90)
+	let [ basketballLines, setBasketballLines ] = useState([1,0,1,0,0])
 	let [ loading, setLoading ] = useState(false)
+	let [ zoomLevel, setZoomLevel ] = useState(0)
 	let renderer = useRef(null)
 	let camera = useRef(null);
 	let scene = useRef(null)
 	let tennisLineMaterial = useRef( new LineMaterial( { color: 0xffffff, linewidth: 0.002}) );
 	let loadedCounter = useRef(0);
+	let prevZoom = useRef(0);
+	let [ galleryFencesUsed, setGalleryFencesUsed ] = useState(false)
 
 	function typeEffect(value){
 		setType(value)
@@ -142,7 +146,14 @@ export default function Tennis(){
 		}
 
 		if(label === 'border'){
-			setBorderColor(color)
+			if(color === ''){
+				removeBorder()
+				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
+
+			}else{
+				setBorderColor(color)
+				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
+			}
 		}
 
 		if(label === 'tennis_line'){
@@ -168,7 +179,7 @@ export default function Tennis(){
 	}
 
 	function changeSurfaceColor(color){
-		let surface = scene.current.children.filter(x => x._id === 'surface');
+		let surface = scene.current.children.filter(x => x.name === 'surface');
 
 		if(surface.length === 0) return;
 
@@ -178,17 +189,19 @@ export default function Tennis(){
 	}
 
 	function changeBorderColor(color){
-		let border = scene.current.children.filter(x => x._id === 'border');
+		let border = scene.current.children.filter(x => x.name === 'border');
 
-		if(border.length === 0) return; 
+		if(border.length === 0) {
+			renderBorder(defaultWidth, defaultLength, color)
+		}else{
+			let _color = hexToRgb(color)
 
-		let _color = hexToRgb(color)
-
-		border[0].material.color = _color
+			border[0].material.color = _color
+		}
 	}
 
 	function changeTennisSurfaceColor(color){
-		let plane = scene.current.children.filter(x => x._id === 'plane');
+		let plane = scene.current.children.filter(x => x.name === 'plane');
 
 		if(plane.length === 0) return;
 
@@ -208,6 +221,29 @@ export default function Tennis(){
 		}
 	}
 
+	function generateImage(){
+		if(type === 'Laykold acrylic coating'){
+			return "https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg"
+		}else{
+			return "//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396"
+		}
+	}
+
+	function generateHref(){
+		if(type === 'Laykold acrylic coating'){
+			return "https://courtsurfacespecialists.com"
+		}else{
+			return "https://diycourt.ca"
+		}
+	}
+
+	function generateAlt(){
+		if(type === 'Laykold acrylic coating'){
+			return "Court Surface Specialists Ltd"
+		}else{
+			return "DIY Court CA"
+		}
+	}
 
 	useEffect(() => {
 		if(!scene.current) return;
@@ -333,14 +369,17 @@ export default function Tennis(){
 		renderer.current.setSize( window.innerWidth, window.innerHeight );
 		//renderer.current.setClearColor( 0xffffff, 0, 0);
 		renderer.current.setPixelRatio( window.devicePixelRatio );
-		//renderer.current.toneMapping = THREE.ReinhardToneMapping;
+		//renderer.current.toneMapping = THREE.LinearToneMapping
 		//renderer.current.toneMappingExposure = 2.3;
 		//renderer.current.shadowMap.enabled = true;
 		if(document.querySelector(".threeJS-container")) document.querySelector(".threeJS-container").appendChild( renderer.current.domElement );
 
-		camera.current = new THREE.PerspectiveCamera( 10, window.innerWidth / window.innerHeight, 1, 1000 );
-		camera.current.position.set( 79.09147944717981, 155.97820948342002, 145.73817374355866 );
-		camera.current.lookAt( 0,0,0 );
+		camera.current = new THREE.PerspectiveCamera( 12, window.innerWidth / window.innerHeight, 2, 1600 );
+		camera.current.position.set(43.60292714932831, 93.06104139037603, 111.10822453090113 );
+
+		//const pt = new THREE.Vector3(38.50390443253893,0.00003815632718041994,-15.614921552374081)
+		//camera.current.lookAt(pt);
+
 
 		window.camera = camera.current
 		scene.current = new THREE.Scene();
@@ -348,46 +387,60 @@ export default function Tennis(){
 		window.scene2 = new THREE.Scene();
 		const controls = new OrbitControls( camera.current, renderer.current.domElement )
 
-		camera.current.zoom = 0.29;
+		camera.current.zoom = 0.28;
 
 		camera.current.updateProjectionMatrix();
 		window.controls = controls;
-		controls.target.set(84.22694952487223, 22.005499803815336,4.226747148428594)
-		controls.update()
+
 
 		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1.5);
 		hemiLight.position.set(0,50,0)
-		//scene.current.add(hemiLight);
+		scene.current.add(hemiLight);
 
-
-		let spotLight = new THREE.SpotLight(0xffa95c, 1.5);
-		spotLight.castShadow = true;
-		spotLight.shadow.bias = -0.0001;
-		spotLight.shadow.mapSize.width = 1024*10
-		spotLight.shadow.mapSize.height = 1024*10
-		spotLight.position.set(25,65,0)
-		//scene.current.add(spotLight)
-/*		const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
-		scene.current.add( directionalLight );*/
 
 		//renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
-		
-		renderBasketballDefault(defaultWidth, defaultLength)
-		//renderTwoPickleBallCourts()
-		//renderPickleball()
-/*		renderBasketball(renderer.current, scene.current, camera.current, 'top')
-		renderBasketball(renderer.current, scene.current, camera.current, 'top-middle')
-		renderBasketball(renderer.current, scene.current, camera.current, 'bottom-middle')
-		renderBasketball(renderer.current, scene.current, camera.current, 'left')
-		renderBasketball(renderer.current, scene.current, camera.current, 'right')*/
+		renderBorderAndSurface(defaultWidth, defaultLength, true)
+		setBasketballLines([...basketballLines])
+    	controls.target.set(39, 0.1, -14);
+    	controls.update();
 
-		controls.addEventListener( 'change', () => renderer.current.render(scene.current, camera.current) );
+		controls.minPolarAngle = 0.9320850529728638
+		controls.maxPolarAngle = 0.9320850529728638
+
+		controls.minDistance = 72;
+		controls.maxDistance = 155.93270984626542;
+
+		controls.addEventListener( 'change', (e,a) => {
+
+			renderer.current.autoClear = true;
+
+			let { minDistance, maxDistance } = controls;
+			let distance = controls.getDistance();
+
+			let range = maxDistance - minDistance;
+
+			let percentage = (distance-minDistance)/range;
+
+			if(percentage !== prevZoom.current){
+				setZoomLevel((1-percentage) * 100)
+			}
+
+			prevZoom.current = percentage;
+			renderer.current.render(scene.current, camera.current)
+		} );
+		renderBasketballLines(defaultWidth, defaultLength)
+
 		renderer.current.render(scene.current, camera.current)
 
+		//renderNet([1,0])
 	}, [loading])
 
 	useEffect( () => {
 		if(!window.scene) return;
+
+		let length = defaultLength
+		let width = defaultWidth 
+
 		renderLight(lights, defaultWidth, defaultLength)
 	}, [lights])
 
@@ -395,10 +448,11 @@ export default function Tennis(){
 		if(!window.scene) return;
 
 		changeBasketballLinesPositions(basketballLines, defaultWidth, defaultLength)
-		changeFencePositions(defaultWidth, defaultLength)
+		renderFence(fences, defaultWidth, defaultLength)
 		changeLightPositions(defaultWidth, defaultLength)
 		renderBorderAndSurface(defaultWidth, defaultLength);
 
+		if(galleryFencesUsed) { renderGallery(!galleryFencesUsed) }
 		window.renderer.render(window.scene, window.camera);
 
 	}, [defaultWidth, defaultLength])
@@ -413,8 +467,8 @@ export default function Tennis(){
 			</Helmet>
 			<div className="left-menu">
 					<div className="center mbot-1">
-				        <a className="logo-img-css" href="https://diycourt.ca">
-				            <img src="//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396" alt="DIY Court Ca" />
+				        <a className="logo-img-css" href={generateHref()}>
+				            <img src={generateImage()} alt={generateAlt()} />
 				        </a>
 					</div>
 					<div>
@@ -459,11 +513,33 @@ export default function Tennis(){
 							</div>
 
 						</div>
+
+						{(fences[3] !== 0 || fences[0] !== 0) &&
+							<label>
+								<button className="ga-fences" onClick={() => {
+									renderGallery(galleryFencesUsed)
+									setGalleryFencesUsed(!galleryFencesUsed)
+								}}>Use {!galleryFencesUsed ? 'Gallery' : 'Standard'} Fence ({!galleryFencesUsed ? '4ft' : '10ft'})</button>
+							</label>
+						}
+					</div>
+				</div>
+
+				<div className="zoomContainer">
+					<p>Zoom: {zoomLevel.toFixed(2)}%</p>
+					<div className="zoomLevel" style={{cursor:'pointer'}}>
+						<i className="fas fa-plus-circle" onClick={() => {
+							window.controls.dIn(0.95)
+							window.controls.update()
+						}}></i>
+						<i style={{cursor:'pointer'}} className="fas fa-minus-circle" onClick={() => {
+							window.controls.dIn(1.05)
+							window.controls.update()
+						}}></i>
 					</div>
 				</div>
 
 				<div className='threeJS-container'>
-
 				</div>
 
 				<div className="right-menu">
@@ -473,13 +549,19 @@ export default function Tennis(){
 
 							<div className="column-direction">
 								<label>Surface</label>
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="surface" cc={type !== 'Laykold acrylic coating' ? "#3b68b1" : "#0082ca"}/>
+								<ColorPicker type={type} 
+								onChange={onChange} 
+								label="surface" 
+								cc={type !== 'Laykold acrylic coating' ? "#3b68b1" : "#0082ca"}
+								w={defaultWidth}
+								l={defaultLength}
+								/>
 							</div>
 
 							<div className="column-direction">
 								<label>Border</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="border" cc="#ffffff" />
+								<ColorPicker w={defaultWidth} l={defaultLength} type={type} onChange={onChange} noColor={true} name="border" label="border" cc="#ffffff" />
 							</div>
 						</div>
 
@@ -493,7 +575,7 @@ export default function Tennis(){
 							<div className="column-direction">
 								<label>Tennis surface</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_surface" cc={type !== 'Laykold acrylic coating' ? "#ff6632":"#013ca6"}/>
+								<ColorPicker type={type} onChange={onChange} label="tennis_surface" cc={type !== 'Laykold acrylic coating' ? "#ff6632":"#013ca6"}/>
 							</div>
 						</div>
 					</div>
@@ -508,6 +590,7 @@ export default function Tennis(){
 								basketballLines={basketballLines} 
 								setBasketballLines={setBasketballLines}
 								type={type}
+								excludePositions={{3: true, 4: true}}
 							/>
 						</div>
 
@@ -515,17 +598,42 @@ export default function Tennis(){
 
 					<div className="mtop-1" style={{width:'85%'}}>
 						<div className="options align-center left-right relative">
-							<Switcher name="Hoops" imgName="hoop" width={defaultWidth} length={defaultLength} />
+							<Switcher 
+								name="Hoops" 
+								imgName="hoop" 
+								width={defaultWidth} 
+								length={defaultLength} 
+								hoopsDefault={[0,1,1,0,0]}
+								excludePositions={{3: true, 4: true}}
+							/>
 						</div>
 
 						<div className="options align-center left-right relative">
-							<SwitcherNet name="Nets" imgName="net" />
+							{/*<SwitcherNet name="Nets" imgName="net" />*/}
 						</div>
 					</div>
 
 					<div className="mtop-1">
-						<WidthSlider defaultValue={50} onChange={sliderOnChange}/>
-						<LongtitudeSlider defaultValue={94} onChange={sliderOnChange}/>
+						<WidthSlider defaultValue={50} min={40} max={60} onChange={sliderOnChange} marks={
+							[{
+								value: 40,
+								label: '40 ft'
+							},
+							{
+								value: 60,
+								label: '60 ft'
+							}]
+						}/>
+						<LongtitudeSlider defaultValue={90} min={80} max={100} onChange={sliderOnChange} marks={[
+							{
+								value: 80,
+								label: '80 ft'
+							},
+							{
+								value:100,
+								label: '100 ft'
+							}
+						]}/>
 					</div>
 
 				</div>

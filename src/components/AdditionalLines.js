@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import ColorPicker from "./ColorPicker";
 import hexToRgb from "../helpers/hexToRgb";
-import { renderBasketball, removeBasketball } from "../renderBasketball";
+import { renderBasketball, removeBasketball, renderMiddleLine } from "../renderBasketball";
 import { renderPickleball, renderTwoPickleBallCourts, removePickleballFromScreen } from "../renderPickleball";
 
-export default function AdditionalLines({defaultWidth, defaultLength, basketballLines, setBasketballLines, type}){
+export default function AdditionalLines({defaultWidth, defaultLength, basketballLines, setBasketballLines, type, excludePositions}){
 	let [ lines, setLines ] = useState([0,0]);
 	let [ showPickleballSelector, setShowPickleballSelector ] = useState(false);
 	let [ showBasketballSelector, setShoBasketballSelector ] = useState(false);
@@ -43,6 +43,13 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 		}else{
 			_lines[pos] = 0;
 		}
+
+		if(!_lines[1]){
+			renderMiddleLine(defaultWidth, defaultLength, defaultLength/2 - 39.2, 13.57)
+		}else{
+			window.scene.children = window.scene.children.filter(x => x.name !== 'middleLine')
+		}
+
 		setBasketballLines([..._lines])
 
 	}
@@ -201,6 +208,8 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 			renderBasketball(x, defaultWidth, defaultLength)
 		})
 
+		console.log(arr)
+		console.log(window.renderer)
 		if(!window.renderer) return;
 		window.renderer.render(window.scene, window.camera)
 	}, [basketballLines])
@@ -238,10 +247,14 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 				<div className="select-basketball select">
 						<img src="/static/assets/images/tennis-court-full.png" alt="bg" className="basketball-court-bg" />
 						<img className="bl-left" onClick={onClickBasketball} data-pos={0}  src={basketballLines[0] === 0 ? "/static/assets/images/basketball-lines-left.png" : "/static/assets/images/basketball-lines-left-full.png"} alt="basketball line" title="Basketball line" />
-						<img className="bl-top" onClick={onClickBasketball} data-pos={1} src={basketballLines[1] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" />
+						<img style={excludePositions[3] ? {left:'50%'} : {}}className="bl-top" onClick={onClickBasketball} data-pos={1} src={basketballLines[1] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" />
 						<img className="bl-right" onClick={onClickBasketball} data-pos={2}  src={basketballLines[2] === 0 ? "/static/assets/images/basketball-lines-right.png" : "/static/assets/images/basketball-lines-right-full.png"} alt="basketball line" title="Basketball line" />
-						<img className="bl-top-middle" onClick={onClickBasketball} data-pos={3} src={basketballLines[3] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" />
-						<img className="bl-bottom-middle" onClick={onClickBasketball} data-pos={4}  src={basketballLines[4] === 0 ? "/static/assets/images/basketball-lines-bottom.png" : "/static/assets/images/basketball-lines-bottom-full.png"} alt="basketball line" title="Basketball line" />
+						{!excludePositions[3] && 
+						<img className="bl-top-middle" onClick={onClickBasketball} data-pos={3} src={basketballLines[3] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" /> }
+
+						{!excludePositions[4] && 
+						<img className="bl-bottom-middle" onClick={onClickBasketball} data-pos={4}  src={basketballLines[4] === 0 ? "/static/assets/images/basketball-lines-bottom.png" : "/static/assets/images/basketball-lines-bottom-full.png"} alt="basketball line" title="Basketball line" /> }
+
 				</div>				
 			}
 		</div>
