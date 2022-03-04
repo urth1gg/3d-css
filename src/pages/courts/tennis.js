@@ -37,7 +37,6 @@ export default function Tennis(){
 	let renderer = useRef(null)
 	let camera = useRef(null);
 	let scene = useRef(null)
-	let tennisLineMaterial = useRef( new LineMaterial( { color: 0xffffff, linewidth: 0.002}) );
 	let loadedCounter = useRef(0);
 	let prevZoom = useRef(0);
 	let [ galleryFencesUsed, setGalleryFencesUsed ] = useState(false)
@@ -58,8 +57,9 @@ export default function Tennis(){
 
 		window.scene.children.filter(x => x._id === 'basketballGroup').forEach(x => x.children.forEach(y => {
 			if(y.name === 'surfaceBasketball'){
-				y.material.transparent = true;
-				y.material.opacity = 0;
+				// y.material.transparent = true;
+				// y.material.opacity = 0;
+				y.material.color = hexToRgb("#ffffff");
 			}else{
 				y.material.color = hexToRgb("#ffffff");
 			}
@@ -398,7 +398,7 @@ export default function Tennis(){
 		scene.current.add(hemiLight);
 
 
-		renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
+		renderTennis(defaultWidth, defaultLength)
 
 
     	controls.target.set(39, 0.1, -14);

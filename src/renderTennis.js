@@ -1,9 +1,15 @@
 import * as THREE from "three";
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 
 
-export function renderTennis(renderer, scene, camera, material, w = 60, l = 120){
+export function renderTennis(w = 60, l = 120, renderSurface){
+		let material = new LineMaterial( { color: 0xffffff, linewidth: 0.002}) 
+
+		let { renderer, scene, camera } = window;
+		if(!renderer) return;
+
 		const points = []
 		const points_out_line = []
 		const pointsMiddleLineRight = [] 
@@ -61,6 +67,11 @@ export function renderTennis(renderer, scene, camera, material, w = 60, l = 120)
 		line3._id = "line";
 		line4._id = "line";
 
+		line.name = "line";
+		line2.name = "line";
+		line3.name = "line";
+		line4.name = "line";
+
 		const _geometry = new THREE.PlaneGeometry( 27, 78);
 		const _material = new THREE.MeshStandardMaterial( {color: 0x013CA6, side: THREE.DoubleSide, reflectivity: 1 } );
 		//const _material = new THREE.MeshBasicMaterial( {color: 0x013CA6, side: THREE.DoubleSide} );
@@ -69,15 +80,15 @@ export function renderTennis(renderer, scene, camera, material, w = 60, l = 120)
 		plane.position.set(39,-0.01,-13.55)
 		window.plane = plane;
 		scene.add( plane );
-		plane._id = 'plane'
+		plane._id = "plane";
+		plane.name = "plane";
 
 
-		renderBorderAndSurface(w,l, true)
+		if(!renderSurface) renderBorderAndSurface(w,l, true)
 		scene.add(line);
 		scene.add(line2);
 		scene.add(line3);
 		scene.add(line4);
-
 
 		renderer.render( scene, camera );
 }

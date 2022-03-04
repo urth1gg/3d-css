@@ -6,14 +6,18 @@ import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
 
 
+function generateLinesColor(){
+	return document.querySelector("input#basketball_lines") ? document.querySelector("input#basketball_lines").value : document.querySelector("input#basketball_line")
+}
 export function renderBasketballDefault(defaultWidth, defaultLength){
 	let w = defaultWidth;
 	let l = defaultLength;
 
+	if(!window.scene) return;
+
 	renderBasketball('right', w, l)
 	renderBasketball('left', w, l)
 	renderBorderAndSurface(w,l, true)
-	renderHalfLineBasketball(w, l)
 }
 
 function renderHalfLineBasketball(w, l){
@@ -27,7 +31,7 @@ function renderHalfLineBasketball(w, l){
 	const geometry = new LineGeometry();
 	geometry.setPositions( points );
 
-	let linesColor = document.querySelector("input#basketball_lines")
+	let linesColor = generateLinesColor()
 
 	let material = generateLinesMaterial();
 
@@ -43,7 +47,7 @@ function renderHalfLineBasketball(w, l){
 function removeExistingBorderAndSurface(){
 	let prevBorder;
 	let prevSurface;
-
+	
 	if(window.scene.children.filter(x => x._id === 'surface').length !== 0){
 		prevSurface = window.scene.children.filter(x => x._id === 'surface')[0]
 		window.scene.children = window.scene.children.filter(x => x._id !== 'surface')
@@ -197,7 +201,7 @@ export function changeBasketballLinesPositions(positions, w,l){
 function generateLinesMaterial(lw){
 	let material;
 
-	let linesColor = document.querySelector("input#basketball_lines").value
+	let linesColor = generateLinesColor();
 
 	if(linesColor !== "false"){
 		material = new LineMaterial({ color: linesColor, linewidth: lw || 0.0015})
@@ -278,7 +282,7 @@ function renderLinesTop(scene, width,length){
 	const geometry = new LineGeometry();
 	geometry.setPositions( points );
 
-	let linesColor = document.querySelector("input#basketball_lines")
+	let linesColor = generateLinesColor();
 
 	let material = generateLinesMaterial();
 
@@ -431,23 +435,23 @@ function renderHoopBackground(group){
 		const geometryCircle = new THREE.CircleGeometry(5,50)
 
 
-		let colorSurface = document.querySelector("input#basketball").value;
+		let colorSurface = document.querySelector("input#basketball") ? document.querySelector("input#basketball").value : document.querySelector("input#basketball_surface").value;
 
 		let _material;
 		let materialCircle;
 
 
 		if(colorSurface !== "false"){
-			_material = new THREE.MeshBasicMaterial( {color: colorSurface, side: THREE.DoubleSide} )
-			materialCircle = new THREE.MeshBasicMaterial( {color: colorSurface, side: THREE.DoubleSide} )
+			_material = new THREE.MeshStandardMaterial( {color: colorSurface, side: THREE.DoubleSide} )
+			materialCircle = new THREE.MeshStandardMaterial( {color: colorSurface, side: THREE.DoubleSide} )
 		}else{
-			_material = new THREE.MeshBasicMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
-			materialCircle = new THREE.MeshBasicMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
+			_material = new THREE.MeshStandardMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
+			materialCircle = new THREE.MeshStandardMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
 		}
 
 		const meshPlane = new THREE.Mesh(geometryPlane, _material)
 		meshPlane.rotation.set(Math.PI / 2, 0, Math.PI / 2)
-		meshPlane.position.set(9.65,-0.03,-8)
+		meshPlane.position.set(9.25,-0.03,-8)
 
 
 		let circle = new THREE.Mesh(geometryCircle, materialCircle);
@@ -465,9 +469,8 @@ function renderHoopBackground(group){
 }
 function drawCircle(radius, color, lineWidth, group){
     
-    if(document.querySelector("input#basketball_lines").value !== "false"){
-    	color = document.querySelector("input#basketball_lines").value
-    }
+	color = generateLinesColor();
+
     let points = [];
       
     // 360 full circle will be drawn clockwise
@@ -494,9 +497,7 @@ function drawFreeThrowCircle(radius, color, lineWidth, group){
     let points = [];
     let points2 = [];
 
-    if(document.querySelector("input#basketball_lines").value !== "false"){
-    	color = document.querySelector("input#basketball_lines").value
-    }
+	color = generateLinesColor()
 
     // 360 full circle will be drawn clockwise
     for(let i = 0; i <= 180; i++){
@@ -662,7 +663,7 @@ function drawHashTop(group){
 	let line = new Line2(geometry, material);
 
 
-	let linesColor = document.querySelector("input#basketball_lines").value
+	let linesColor = generateLinesColor();
 
 	const backgroundGeometry = new THREE.PlaneGeometry(1.2, 1.2);
 	const backgroundMaterial = new THREE.MeshBasicMaterial( {color: linesColor, side: THREE.DoubleSide, reflectivity: 1} );
@@ -735,10 +736,10 @@ function drawHashBottom(group){
 	//group.add( line )
 
 
-	let linesColor = document.querySelector("input#basketball_lines").value
+	let linesColor = generateLinesColor()
 
 	const backgroundGeometry = new THREE.PlaneGeometry(1.2, 1.2);
-	const backgroundMaterial = new THREE.MeshBasicMaterial( {color: linesColor, side: THREE.DoubleSide, reflectivity: 1} );
+	const backgroundMaterial = new THREE.MeshStandardMaterial( {color: linesColor, side: THREE.DoubleSide, reflectivity: 1} );
 	const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 	surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 	surface.position.set(7.2,0,-13.5)
@@ -758,6 +759,7 @@ function drawHashBottom(group){
 
 	line = new Line2(geometry, material);
 	line._id = "lineBasketball"
+	line.name = "lineBasketball"
 
 	group.add( line )
 
@@ -772,6 +774,7 @@ function drawHashBottom(group){
 
 	line = new Line2(geometry, material);
 	line._id = "lineBasketball"
+	line.name = "lineBasketball"
 
 	group.add( line )
 }
@@ -794,7 +797,7 @@ function drawBaseLine(group){
 	group.add( line )
 }
 
-function renderOutsideLines(w,l, group, init, shouldRenderMiddlePart){
+function renderOutsideLines(w,l, group, init, shouldRenderMiddlePart, color){
 	let points = [];
 
 	let offsetZ = 13.57
@@ -807,6 +810,9 @@ function renderOutsideLines(w,l, group, init, shouldRenderMiddlePart){
 
 	let material = generateLinesMaterial()
 
+	if(color){
+		material.color = color;
+	}
 	geometry.setPositions(points);
 
 	let line = new Line2(geometry, material);
@@ -842,13 +848,14 @@ function renderOutsideLines(w,l, group, init, shouldRenderMiddlePart){
 	group.add(new Line2(geometry, material))
 
 	if(init || shouldRenderMiddlePart){
-		renderMiddleLine(w,l,offsetX,offsetZ)
+		renderMiddleLine(w,l,offsetX,offsetZ, color)
 	}
 }
 
-export function renderMiddleLine(w,l, offsetX, offsetZ){
+export function renderMiddleLine(w,l, offsetX, offsetZ, color){
 	let group = new THREE.Group();
 	let material = generateLinesMaterial();
+	if(color) material.color = color
 	let points;
 	let geometry;
 
@@ -882,7 +889,7 @@ export function renderMiddleLine(w,l, offsetX, offsetZ){
 	window.scene.add(group)
 }
 
-export function renderBasketballLines(w,l, init){
+export function renderBasketballLines(w,l, init, color){
 	let group = new THREE.Group();
 
 	let shouldRenderMiddlePart = window.scene.children.some(x => x.name === 'middleLine');
@@ -890,7 +897,7 @@ export function renderBasketballLines(w,l, init){
 	window.scene.children = window.scene.children.filter(x => x.name !== 'basketballOutsideLines' && x.name !== 'middleLine')
 
 	group.name = "basketballOutsideLines"
-	renderOutsideLines(w,l, group, init, shouldRenderMiddlePart)
+	renderOutsideLines(w,l, group, init, shouldRenderMiddlePart, color)
 
 	console.log(group)
 	window.scene.add(group)

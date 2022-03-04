@@ -37,6 +37,7 @@ body{
 	position:absolute;
 	left:0;
 	top:0;
+	min-width:265px;
 }
 
 .left-menu::-webkit-scrollbar{
@@ -65,6 +66,7 @@ body{
 	top:0;
 	right:0;
 	transition: all 0.8s ease;
+	min-width: 264px;
 }
 
 .right-menu > div{
@@ -358,10 +360,10 @@ input:checked + .slider:before {
 	flex-wrap: wrap;
 }
 
-.additional-lines  img{
+.additional-lines img{
 	cursor:pointer;
 	width:100px !important;
-	height: 100px !important;
+	height: 100px;
 }
 
 .minus-px{
@@ -389,6 +391,7 @@ input:checked + .slider:before {
 	display: flex;
 	justify-content: space-around;
 }
+
 .relative{
 	position:relative;
 }
@@ -490,6 +493,7 @@ img{
 
 .MuiSlider-root{
 	color: #00669B !important;
+	padding:5px 0px !important;
 }
 
 .MuiSlider-rail{
@@ -499,6 +503,11 @@ img{
 .MuiSlider-track{
 	height:4px !important;
 }
+
+.MuiSlider-markLabel{
+	top:13px !important;
+}
+.MuiSlider-marked{}
 
 .MuiSlider-mark{
 	height:4px !important;
@@ -624,6 +633,7 @@ canvas{
 	width:100% !important;
 	height:auto !important;
 	z-index:999;
+	background:white;
 }
 
 .additional-lines img.bl-left{
@@ -676,3 +686,16 @@ canvas{
 	height: auto!important;
 }
 
+.scrollable-x{
+	overflow-x:auto;
+}
+
+.sliders{
+	position:absolute;
+	right:140%;
+	height: 80px;
+}
+
+.img-tennis{
+	height: auto !important;
+}
