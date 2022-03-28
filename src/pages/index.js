@@ -41,13 +41,13 @@ const IndexPage = () => {
             <div>
               <img src="/static/assets/images/pickleball-show.png" height="120px" />
             </div>
-            <a href="#">Pickleball</a>
+            <a href="courts/pickleball">Pickleball</a>
           </div>
           <div className="card">
             <div>
               <img src="/static/assets/images/multisport-show.png" height="120px" />
             </div>
-            <a href="#">Multi-sport</a>
+            <a href="courts/multisport">Multi-sport</a>
           </div>
         </div>
       </div>

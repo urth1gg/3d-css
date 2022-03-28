@@ -9,7 +9,7 @@ import { renderTennis } from "../renderTennis";
 export default function AdditionalLines({
 		defaultWidth, defaultLength, basketballLines, 
 		setBasketballLines, type, excludePositions, isBasketball, isPickleball,
-		shouldRenderTennis
+		shouldRenderTennis, isMultisport
 	}){
 	let [ lines, setLines ] = useState([0,0]);
 	let [ showPickleballSelector, setShowPickleballSelector ] = useState(false);
@@ -174,8 +174,6 @@ export default function AdditionalLines({
 			}else{
 				let children = window.scene.children.filter(x => x.name === 'plane')
 
-				console.log(color)
-				console.log('tennis color')
 				if(color){
 					children.forEach(x => {
 						x.material.color = hexToRgb(color)
@@ -323,9 +321,10 @@ export default function AdditionalLines({
 			{!isBasketball &&  <h4 style={{textAlign:'center', color: '#007ABA',cursor:'pointer', marginBottom:0, width:'100%'}} onClick={showMoreHandler}>{!showMore ? 'SHOW MORE' : 'SHOW LESS'}</h4> }	
 			
 			{showPickleballSelector && 
+	
 				<div className="select-pickleball select">
 					<img onClick={onClickCustom} data-pos={1} data-value={1} src={lines[1] === 1 ? "/static/assets/images/pickleball-court-notext-full.svg" : "/static/assets/images/pickleball-court-notext.svg"} alt="pickleball" title="Pickleball" />
-					<img onClick={onClickCustom} data-pos={1} data-value={2} src={lines[1] === 2 ? "/static/assets/images/two-pickleball-courts-notext-full.svg" : "/static/assets/images/two-pickleball-courts-notext.svg"} alt="pickleball" title="Two pickleball courts" />
+					{!isMultisport && <img onClick={onClickCustom} data-pos={1} data-value={2} src={lines[1] === 2 ? "/static/assets/images/two-pickleball-courts-notext-full.svg" : "/static/assets/images/two-pickleball-courts-notext.svg"} alt="pickleball" title="Two pickleball courts" />}
 				</div>
 			}
 

@@ -60,14 +60,16 @@ header{
 	justify-content: space-between;
 	width:100%;
 	gap:1rem;
+	flex-wrap:wrap;
 }
 
 .cards > .card{
-	width:100%;
+	width:20%;
 	height:350px;
 	background-color:#cfe2ec;
 	color:white;
 	position: relative;
+	min-width: 325px;
 }
 
 .card > div{

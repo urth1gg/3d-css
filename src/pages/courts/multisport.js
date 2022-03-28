@@ -631,6 +631,7 @@ export default function Basketball(){
 								type={type}
 								excludePositions={{1: true, 2: true}}
                                 shouldRenderTennis={true}
+								isMultisport={true}
 							/>
 						</div>
 
@@ -666,9 +667,9 @@ export default function Basketball(){
 								label: '60 ft'
 							}]
 						}/>
-						<LongtitudeSlider defaultValue={120} min={110} max={120} onChange={sliderOnChange} marks={[
+						<LongtitudeSlider defaultValue={120} min={85} max={120} onChange={sliderOnChange} marks={[
 							{
-								value: 110,
+								value: 85,
 								label: '110 ft'
 							},
 							{
