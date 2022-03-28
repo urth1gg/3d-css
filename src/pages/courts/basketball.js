@@ -24,11 +24,11 @@ export default function Basketball(){
 	let [ lights, setLights ] = useState([0,0,0,0,0,0])
 	let [ fences, setFences ] = useState([0,0,0,0]);
 	let [ rebounder, setRebounder ] = useState([0,0,0,0]);
-	let [ type, setType ] = useState('Laykold acrylic coating');
-	let [ surfaceColor, setSurfaceColor ] = useState('#000000');
-	let [ borderColor, setBorderColor ] = useState('#000000');
+	let [ type, setType ] = useState('Laykold (Acrylic Coating) 🎨');
+	let [ surfaceColor, setSurfaceColor ] = useState('#f49e23');
+	let [ borderColor, setBorderColor ] = useState('#013ca6');
 	let [ basketballLineColor, setBasketballLineColor ] = useState('#ffffff');
-	let [ basketballSurfaceColor, setBasketballSurfaceColor ] = useState('#ffffff');
+	let [ basketballSurfaceColor, setBasketballSurfaceColor ] = useState('#013ca6');
 	let [ defaultWidth, setDefaultWidth ] = useState(50)
 	let [ defaultLength, setDefaultLength ] = useState(90)
 	let [ basketballLines, setBasketballLines ] = useState([1,0,1,0,0])
@@ -48,11 +48,11 @@ export default function Basketball(){
 		let surfaceColor;
 		let basketballSurfaceColor;
 
-		if(value === 'Laykold acrylic coating'){
-			surfaceColor = '#0082ca'
+		if(value === 'Laykold (Acrylic Coating) 🎨'){
+			surfaceColor = '#f49e23'
 			basketballSurfaceColor = '#013ca6'
 		}else{
-			surfaceColor = '#3b68b1';
+			surfaceColor = '#3b68b1'
 			basketballSurfaceColor = '#ff6632'
 		}
 
@@ -161,6 +161,7 @@ export default function Basketball(){
 		}
 
 		if(label === 'basketball_surface'){
+			if(color === '') color = surfaceColor;
 			setBasketballSurfaceColor(color)
 		}
 	}
@@ -265,7 +266,7 @@ export default function Basketball(){
 	}
 
 	function generateImage(){
-		if(type === 'Laykold acrylic coating'){
+		if(type === 'Laykold (Acrylic Coating) 🎨'){
 			return "https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg"
 		}else{
 			return "//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396"
@@ -273,7 +274,7 @@ export default function Basketball(){
 	}
 
 	function generateHref(){
-		if(type === 'Laykold acrylic coating'){
+		if(type === 'Laykold (Acrylic Coating) 🎨'){
 			return "https://courtsurfacespecialists.com"
 		}else{
 			return "https://diycourt.ca"
@@ -281,7 +282,7 @@ export default function Basketball(){
 	}
 
 	function generateAlt(){
-		if(type === 'Laykold acrylic coating'){
+		if(type === 'Laykold (Acrylic Coating) 🎨'){
 			return "Court Surface Specialists Ltd"
 		}else{
 			return "DIY Court CA"
@@ -320,6 +321,7 @@ export default function Basketball(){
 
 	useEffect( () => {
 		renderFence(fences, defaultWidth, defaultLength)
+		renderGallery(!galleryFencesUsed)
 	}, [fences])
 	useEffect( () => {
 		var cache = document.createElement("div");
@@ -442,7 +444,10 @@ export default function Basketball(){
 
 
 		//renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
-		renderBorderAndSurface(defaultWidth, defaultLength, true)
+		setTimeout( () => { 
+			renderBorderAndSurface(defaultWidth, defaultLength, true) 
+			renderBasketballLines(defaultWidth, defaultLength, true)
+		} , 150)
 		setBasketballLines([...basketballLines])
     	controls.target.set(39, 0.1, -14);
     	controls.update();
@@ -471,8 +476,6 @@ export default function Basketball(){
 			prevZoom.current = percentage;
 			renderer.current.render(scene.current, camera.current)
 		} );
-
-		renderBasketballLines(defaultWidth, defaultLength, true)
 
 		renderer.current.render(scene.current, camera.current)
 
@@ -517,7 +520,7 @@ export default function Basketball(){
 				        </a>
 					</div>
 					<div>
-						<p>Surface</p>
+						<p>Surface options</p>
 
 						<Dropdown parentEffect={typeEffect} />
 					</div>
@@ -597,7 +600,7 @@ export default function Basketball(){
 								<ColorPicker type={type} 
 								onChange={onChange} 
 								label="surface" 
-								cc={type !== 'Laykold acrylic coating' ? "#3b68b1" : "#0082ca"}
+								cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#3b68b1" : "#eb7203"}
 								w={defaultWidth}
 								l={defaultLength}
 								/>
@@ -612,15 +615,15 @@ export default function Basketball(){
 
 						<div className='image-picker--container left-right'>
 							<div className="column-direction">
-								<label>BB Lines</label>
+								<label>Basketball Surface</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="basketball_line" cc="#ffffff" />
+								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#013ca6" }/>
 							</div>
 
 							<div className="column-direction">
-								<label>BB surface</label>
+								<label>Basketball Lines</label>
 
-								<ColorPicker type={type} onChange={onChange} label="basketball_surface" cc={type !== 'Laykold acrylic coating' ? "#ff6632":"#013ca6"}/>
+								<ColorPicker type={type} addWhite={true} onChange={onChange} label="basketball_line" cc="#ffffff" />
 							</div>
 						</div>
 					</div>
@@ -683,6 +686,7 @@ export default function Basketball(){
 						]}/>
 					</div>
 
+					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
 		</>
 	)

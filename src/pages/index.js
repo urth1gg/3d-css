@@ -27,17 +27,26 @@ const IndexPage = () => {
         <div className="cards">
           <div className="card">
             <div>
-              <img src="/static/assets/images/img-example.png" height="190px" width="90%" />
+              <img src="/static/assets/images/img-example.png" height="120px" />
             </div>
             <a href="courts/tennis">Tennis</a>
           </div>
           <div className="card">
+            <div>
+              <img src="/static/assets/images/basketball-show.png" height="120px" />
+            </div>
             <a href="courts/basketball">Basketball</a>
           </div>
           <div className="card">
+            <div>
+              <img src="/static/assets/images/pickleball-show.png" height="120px" />
+            </div>
             <a href="#">Pickleball</a>
           </div>
           <div className="card">
+            <div>
+              <img src="/static/assets/images/multisport-show.png" height="120px" />
+            </div>
             <a href="#">Multi-sport</a>
           </div>
         </div>

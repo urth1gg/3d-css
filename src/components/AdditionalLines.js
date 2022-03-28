@@ -6,7 +6,11 @@ import { renderPickleball, renderTwoPickleBallCourts, removePickleballFromScreen
 import { renderTennis } from "../renderTennis";
 
 
-export default function AdditionalLines({defaultWidth, defaultLength, basketballLines, setBasketballLines, type, excludePositions,isBasketball}){
+export default function AdditionalLines({
+		defaultWidth, defaultLength, basketballLines, 
+		setBasketballLines, type, excludePositions, isBasketball, isPickleball,
+		shouldRenderTennis
+	}){
 	let [ lines, setLines ] = useState([0,0]);
 	let [ showPickleballSelector, setShowPickleballSelector ] = useState(false);
 	let [ showBasketballSelector, setShoBasketballSelector ] = useState(false);
@@ -14,6 +18,11 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 	let [ tennisClicked, setTennisClicked ] = useState(false)
 	let handler = useRef(null)
 	
+
+	useEffect( () => {
+		setTennisClicked(true)
+		setTimeout( () => renderTennis(defaultWidth, defaultLength, true, '#055739'), 150)
+	}, [shouldRenderTennis])
 	function onClick(e){
 		let pos = e.target.dataset.pos;
 
@@ -143,24 +152,53 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 
 					_children.forEach(x =>{
 						if(x.name === 'surfaceBasketball') {
-							x.material.color = hexToRgb(color)
-							x.material.transparent = false;
-							x.material.opacity = 1;
+							if(!color){
+								x.material.transparent = true;
+								x.material.opacity = 0;
+							}else{
+								x.material.color = hexToRgb(color)
+								x.material.transparent = false;
+								x.material.opacity = 1;
+							}
+							
 						}
+					})
+				}
+			}
+		}else if(label === 'tennis'){
+			if(type === 'lines'){
+				let children = window.scene.children.filter(x => x.name === 'line')
+
+				console.log(children)
+				children.forEach(x => x.material.color = hexToRgb(color))
+			}else{
+				let children = window.scene.children.filter(x => x.name === 'plane')
+
+				console.log(color)
+				console.log('tennis color')
+				if(color){
+					children.forEach(x => {
+						x.material.color = hexToRgb(color)
+						x.material.opacity = 1
+					})
+				}else{
+					children.forEach(x => {
+						x.material.color = hexToRgb(color)
+						x.material.opacity = 0;
+						x.material.transparent = true;
 					})
 				}
 			}
 		}else{
 			let children = window.scene.children.filter(x => x._id === 'pickleballGroup')
 
-			console.log(children)
 			if(!children) return;
 
 			if(type === 'lines'){
 				for(let i = 0; i < children.length; i++){
 					let _children = children[i].children.filter(x => x._id = 'linePickleball')
 
-					_children.forEach(x =>{
+					_children.forEach(x => {
 						if(x.name !== 'surfacePickleball') x.material.color = hexToRgb(color)
 					})
 				}
@@ -171,9 +209,14 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 
 					_children.forEach(x =>{
 						if(x.name === 'surfacePickleball') {
-							x.material.color = hexToRgb(color)
-							x.material.transparent = false;
-							x.material.opacity = 1;
+							if(!color){
+								x.material.transparent = true;
+								x.material.opacity = 0;
+							}else{
+								x.material.color = hexToRgb(color)
+								x.material.transparent = false;
+								x.material.opacity = 1;
+							}
 						}
 					})
 				}
@@ -244,26 +287,40 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 		<div className="img-cont left-right wrap">
 
 			{!showMore && <>
-				<div className="lines-colorpicker-container">
-					<img onClick={onClickBasketball} data-pos={-1} src={basketballLines.includes(1) ? "/static/assets/images/basketball-court-full.svg" : "/static/assets/images/basketball-court.svg"} title="Basketball" alt="basketball" />
-					<ColorPicker additionalOptions={true} label="basketball" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
-				</div>
 
-				<div className="lines-colorpicker-container">
-					{renderImage()}
-					<ColorPicker additionalOptions={true} label="pickleball" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
-				</div>
+				{isBasketball && 
+					<div className="lines-colorpicker-container">
+						<img onClick={onClickTennis} className="img-tennis" style={{marginBottom: '5px'}} src={tennisClicked ? "/static/assets/images/tennis-court-show-full.png" : "/static/assets/images/tennis-court-show.png"} />
+						<ColorPicker additionalOptions={true} label="tennis" noColor={true} onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
+					</div>	
+				}
+
+				{!isBasketball && 
+					<div className="lines-colorpicker-container">
+						<img onClick={onClickBasketball} data-pos={-1} src={basketballLines.includes(1) ? "/static/assets/images/basketball-court-full.svg" : "/static/assets/images/basketball-court.svg"} title="Basketball" alt="basketball" />
+						<ColorPicker additionalOptions={true} label="basketball" noColor={true} onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
+					</div>
+				}
+				
+				{!isPickleball && 
+					<div className="lines-colorpicker-container">
+						{renderImage()}
+						<ColorPicker additionalOptions={true} label="pickleball" onChange={onChange} noColor={true} type={type} cc2="#ffffff" cc="#055739" />
+					</div>				
+				}
+
 				</>
 			}
+
 
 			{showMore && 
 			<div className="lines-colorpicker-container">
 				<img onClick={onClickTennis} className="img-tennis" style={{marginBottom: '5px'}} src={tennisClicked ? "/static/assets/images/tennis-court-show-full.png" : "/static/assets/images/tennis-court-show.png"} />
-				<ColorPicker additionalOptions={true} label="tennis" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
+				<ColorPicker additionalOptions={true} noColor={true}  label="tennis" onChange={onChange} type={type} cc2="#ffffff" cc="#055739" />
 			</div>	
 			}
 
-			<h4 style={{textAlign:'center', color: '#007ABA',cursor:'pointer', marginBottom:0, width:'100%'}} onClick={showMoreHandler}>{!showMore ? 'SHOW MORE' : 'SHOW LESS'}</h4>
+			{!isBasketball &&  <h4 style={{textAlign:'center', color: '#007ABA',cursor:'pointer', marginBottom:0, width:'100%'}} onClick={showMoreHandler}>{!showMore ? 'SHOW MORE' : 'SHOW LESS'}</h4> }	
 			
 			{showPickleballSelector && 
 				<div className="select-pickleball select">
@@ -276,9 +333,10 @@ export default function AdditionalLines({defaultWidth, defaultLength, basketball
 				showBasketballSelector && 
 				<div className="select-basketball select">
 						<img src="/static/assets/images/basketball-court-bg.png" alt="bg" className="basketball-court-bg" />
-						<img className="bl-left" onClick={onClickBasketball} data-pos={0}  src={basketballLines[0] === 0 ? "/static/assets/images/basketball-lines-left.png" : "/static/assets/images/basketball-lines-left-full.png"} alt="basketball line" title="Basketball line" />
-						<img style={excludePositions[3] ? {left:'50%'} : {}}className="bl-top" onClick={onClickBasketball} data-pos={1} src={basketballLines[1] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" />
-						<img className="bl-right" onClick={onClickBasketball} data-pos={2}  src={basketballLines[2] === 0 ? "/static/assets/images/basketball-lines-right.png" : "/static/assets/images/basketball-lines-right-full.png"} alt="basketball line" title="Basketball line" />
+						
+						{!excludePositions[0] && <img className="bl-left" onClick={onClickBasketball} data-pos={0}  src={basketballLines[0] === 0 ? "/static/assets/images/basketball-lines-left.png" : "/static/assets/images/basketball-lines-left-full.png"} alt="basketball line" title="Basketball line" /> }
+						{!excludePositions[1] && <img style={excludePositions[1] ? {left:'50%'} : {}}className="bl-top" onClick={onClickBasketball} data-pos={1} src={basketballLines[1] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" /> }
+						{!excludePositions[2] && <img className="bl-right" onClick={onClickBasketball} data-pos={2}  src={basketballLines[2] === 0 ? "/static/assets/images/basketball-lines-right.png" : "/static/assets/images/basketball-lines-right-full.png"} alt="basketball line" title="Basketball line" /> }
 						{!excludePositions[3] && 
 						<img className="bl-top-middle" onClick={onClickBasketball} data-pos={3} src={basketballLines[3] === 0 ? "/static/assets/images/basketball-lines-top.png" : "/static/assets/images/basketball-lines-top-full.png"} alt="basketball line" title="Basketball line" /> }
 

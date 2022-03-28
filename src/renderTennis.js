@@ -4,7 +4,7 @@ import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 
 
-export function renderTennis(w = 60, l = 120, renderSurface){
+export function renderTennis(w = 60, l = 120, renderSurface, initColor){
 		let material = new LineMaterial( { color: 0xffffff, linewidth: 0.002}) 
 
 		let { renderer, scene, camera } = window;
@@ -73,8 +73,21 @@ export function renderTennis(w = 60, l = 120, renderSurface){
 		line4.name = "line";
 
 		const _geometry = new THREE.PlaneGeometry( 27, 78);
-		const _material = new THREE.MeshStandardMaterial( {color: 0x013CA6, side: THREE.DoubleSide, reflectivity: 1 } );
-		//const _material = new THREE.MeshBasicMaterial( {color: 0x013CA6, side: THREE.DoubleSide} );
+
+		let color = document.querySelector('input#tennis_surface') ? document.querySelector("input#tennis_surface").value : '';
+
+		if(!color) color = document.querySelector("input#tennis") ? document.querySelector("input#tennis").value : '';
+
+		if(initColor) color = initColor;
+		
+		let _material;
+
+		if(!color){
+			_material = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide, transparent: true, opacity: 0 } );
+		}else{
+			_material = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide, reflectivity: 1, opacity: 1 } );
+		}
+
 		const plane = new THREE.Mesh( _geometry, _material );
 		plane.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		plane.position.set(39,-0.01,-13.55)
@@ -118,7 +131,8 @@ export function renderBorderAndSurface(w,l, init){
 	const borderGeometry = new THREE.PlaneGeometry(w+2,l+2);
 	if(init){
 
-		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
+		let surfaceColor = document.querySelector("input#surface") ? document.querySelector("input#surface").value : '';
+		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: surfaceColor, side: THREE.DoubleSide, reflectivity: 1} );
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)

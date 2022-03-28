@@ -95,17 +95,17 @@ function Switcher({name, imgName, width, length, hoopsDefault, excludePositions,
 			<img src="/static/assets/images/tennis-court-full.png" className="bg-img-hoops" />
 			<div className="circular-position">
 
-				<img 
+				{!excludePositions[0] && <img 
 					className="img-select top" 
 					src={hoops[0] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} 
 					onClick={onClickHoops} 
 					data-pos={0} 
 					style={excludePositions[3] ? {left: '50%'}: {}}
-				/>
+				/>}
 				{!excludePositions[3] && <img className="img-select top-middle" src={hoops[3] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={3} /> }
 
-				<img className="img-select left" src={hoops[1] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={1} />
-				<img className="img-select right" src={hoops[2] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={2} />
+				{!excludePositions[1] && <img className="img-select left" src={hoops[1] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={1} /> }
+				{!excludePositions[2] && <img className="img-select right" src={hoops[2] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={2} />}
 
 				{!excludePositions[4] && <img className="img-select bottom-middle" src={hoops[4] === 0 ? "/static/assets/images/top-board-noborder-check.png" : "/static/assets/images/top-board-noborder-full-check.png"} onClick={onClickHoops} data-pos={4} />}
 			</div>
@@ -114,13 +114,17 @@ function Switcher({name, imgName, width, length, hoopsDefault, excludePositions,
 	)
 }
 
-function SwitcherNet({name,imgName}){
+function SwitcherNet({name,imgName, defaultState}){
 	let [ nets, setNets ] = useState([0,0])
 	let [ checked, setChecked ] = useState(false)
 	let [ showSelect, setShowSelect ] = useState(false)
 
 	let handler = useRef(null)
 
+
+	useEffect( () => {
+		setNets([...defaultState])
+	}, [defaultState])
 	function close(e){
 		let el = document.querySelector(".select-nets")
 

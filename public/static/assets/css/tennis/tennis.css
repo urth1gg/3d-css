@@ -37,7 +37,7 @@ body{
 	position:absolute;
 	left:0;
 	top:0;
-	min-width:265px;
+	min-width:275px;
 }
 
 .left-menu::-webkit-scrollbar{
@@ -90,11 +90,12 @@ body{
 .type{
 	padding:10px;
 	border-radius: 15px;
-	width:14vw;
+	width:unset;
 	background: #00669B;
 	color:white;
 	position:relative;
 	margin:0 auto;
+	font-size:14.5px;
 }
 
 .type::after{
@@ -291,15 +292,14 @@ input:checked + .slider:before {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	height:130px;
+	height:140px;
 	width:100px;
 }
 
 .column-direction > label{
 	display: inline-block;
-	margin-bottom: 15px;
+	margin-bottom: 7px;
 	width:100px;
-	white-space: nowrap;
 }
 
 .image-picker--container{
@@ -312,27 +312,27 @@ input:checked + .slider:before {
 
 
 .color-container{
-	width:80px;
-	height:80px;
+	width:30px;
+	height:30px;
 }
 
 .colors-container{
 	position:absolute;
 	overflow:scroll;
-	height:calc( 105px * 6);
-	top:50px;
-	left:-60px;
+	height:300px;
+	top:-30px;
+	left:-80px;
 	transform:translate(-50%);
 	z-index:999;
-	width:280px;
+	width:200px;
 	background: white;
 }
 
 .color-wrapper{
 	color:black;
-	display: flex;
-	justify-content: space-around;
-	padding:25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .color-wrapper:hover{
@@ -400,8 +400,8 @@ input:checked + .slider:before {
 	background:white;
 	position: absolute;
 	top:35px;
-	left:-80px;
-	width:100%;
+	top: -100px;
+    left: -130px;
 	z-index:55;
 	min-height: 192px;
 	height:220px;
@@ -470,8 +470,8 @@ img{
 .select-nets{
 	background:white;
 	position: absolute;
-	top:35px;
-	left:0;
+	top:-100px;
+	left:-50px;
 	width:100%;
 	z-index:55;
 	min-height: 192px;
@@ -602,7 +602,6 @@ canvas{
 }
 
 .colors-container::-webkit-scrollbar{
-	display: none;
 }
 
 .picked-colors-container{
@@ -693,7 +692,7 @@ canvas{
 .sliders{
 	position:absolute;
 	right:140%;
-	height: 80px;
+	border-bottom: unset !important;
 }
 
 .img-tennis{

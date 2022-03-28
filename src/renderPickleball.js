@@ -200,11 +200,11 @@ export function renderTwoPickleBallCourts(){
 }
 
 function generatePickleballSurfaceMaterial(){
-	let inp = document.querySelector("input#pickleball").value 
+	let inp = document.querySelector("input#pickleball") ? document.querySelector("input#pickleball").value : ''
 
 	let material 
 
-	if(inp !== "false"){
+	if(inp !== "false" && inp !== ''){
 	  material = new THREE.MeshBasicMaterial({ color: inp, side: THREE.DoubleSide})
 	}else{
       material = new THREE.MeshBasicMaterial( { color: 0x000000, transparent: true, opacity: 0, side: THREE.DoubleSide})
@@ -232,12 +232,12 @@ function pickleballSurface(group, x, z){
 function generateLinesMaterial(){
 	let material
 
-	let linesColor = document.querySelector("input#pickleball_lines").value
+	let linesColor = document.querySelector("input#pickleball_lines") ? document.querySelector("input#pickleball_lines").value : ''
 
 	if(linesColor !== "false"){
 		material = new LineMaterial({ color: linesColor, linewidth: 0.002})
 	}else{
-      material = new LineMaterial( { color: 0xffffff, linewidth: 0.002})
+    	material = new LineMaterial( { color: 0xffffff, linewidth: 0.002})
 	}
 
 	return material

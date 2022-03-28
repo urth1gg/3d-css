@@ -286,3 +286,14 @@ header{
 	flex-direction: column;
 	justify-content: center;
 }
+
+.disclaimer{
+	position:fixed;
+	left:50%;
+	transform:translateX(-50%);
+	bottom:50px;
+}
+
+.type{
+	width: unset !important
+}

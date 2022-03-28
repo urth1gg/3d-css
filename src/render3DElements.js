@@ -968,6 +968,8 @@ export function changeHoopPositions(width,length){
 }
 
 export function renderGallery(type){
+	if(!window.scene) return; 
+	
 	let fenceTop = window.scene.children.filter(x => x.name === 'fenceTop')
 	let fenceBottom =  window.scene.children.filter(x => x.name === 'fenceBottom')
 

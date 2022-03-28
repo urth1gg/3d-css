@@ -3,7 +3,7 @@ import React, { useState } from "react";
 export default function Dropdown({parentEffect}){
 
 	let [ showOptions, setShowOptions ] = useState(false)
-	let [ current, setCurrent ] = useState('Laykold acrylic coating')
+	let [ current, setCurrent ] = useState('Laykold (Acrylic Coating) 🎨')
 
 	function handleOptions(){
 		setShowOptions(!showOptions)
@@ -19,8 +19,8 @@ export default function Dropdown({parentEffect}){
 			<p className="options--show">{current}</p>
 
 			{showOptions && <>
-				<p className="options--select options--select-first" onClick={() => onClick('Laykold acrylic coating')}>Laykold acrylic coating</p>
-				<p className="options--select" onClick={() => onClick('VersaCourt sport tile system')}>VersaCourt sport tile system</p>
+				<p className="options--select options--select-first" onClick={() => onClick('Laykold (Acrylic Coating) 🎨')}>Laykold (Acrylic Coating) 🎨</p>
+				<p className="options--select" onClick={() => onClick('VersaCourt (Sport Tile) 🧩')}>VersaCourt (Sport Tile) 🧩</p>
 				</>
 			}
 		</div>

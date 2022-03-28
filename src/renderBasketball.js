@@ -68,8 +68,10 @@ export function renderBorderAndSurface(w,l, init){
 	const backgroundGeometry = new THREE.PlaneGeometry(w, l);
 	const borderGeometry = new THREE.PlaneGeometry(w + 12, l + 12 )
 	if(init){
+		
+		let surfaceColor = document.querySelector("input#surface") ? document.querySelector("input#surface").value : 0Xf49e23;
 
-		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: 0x0082CA, side: THREE.DoubleSide, reflectivity: 1} );
+		const backgroundMaterial = new THREE.MeshStandardMaterial( {color: surfaceColor, side: THREE.DoubleSide, reflectivity: 1} );
 		const surface = new THREE.Mesh( backgroundGeometry, backgroundMaterial );
 		surface.rotation.set( Math.PI / 2, 0, Math.PI / 2 );
 		surface.position.set(39.2,-0.02,-13.57)
@@ -260,7 +262,7 @@ function renderLinesLeft(scene, width, length){
 	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
-	drawThreePointer(group);
+	drawThreePointer(group, width, length);
 	drawHashTop(group);
 	drawHashBottom(group);
 	drawBaseLine(group);
@@ -297,7 +299,7 @@ function renderLinesTop(scene, width,length){
 	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
-	drawThreePointer(group);
+	drawThreePointer(group, width, length);
 	drawHashTop(group);
 	drawHashBottom(group);
 	drawBaseLine(group);
@@ -335,7 +337,7 @@ function renderLinesRight(scene, width, length){
 	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
-	drawThreePointer(group);
+	drawThreePointer(group, width, length);
 	drawHashTop(group);
 	drawHashBottom(group);
 	drawBaseLine(group);
@@ -376,7 +378,7 @@ function renderLinesTopMiddle(scene, width,length){
 	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
-	drawThreePointer(group);
+	drawThreePointer(group, width, length);
 	drawHashTop(group);
 	drawHashBottom(group);
 	drawBaseLine(group);
@@ -414,7 +416,7 @@ function renderLinesBottomMiddle(scene, width, length){
 	drawFreeThrowCircle(5, '#ffffff', 0.0015, group)
 	drawSideLinesBottom(group);
 	drawSideLinesTop(group);
-	drawThreePointer(group);
+	drawThreePointer(group, width, length);
 	drawHashTop(group);
 	drawHashBottom(group);
 	drawBaseLine(group);
@@ -437,6 +439,7 @@ function renderHoopBackground(group){
 
 		let colorSurface = document.querySelector("input#basketball") ? document.querySelector("input#basketball").value : document.querySelector("input#basketball_surface").value;
 
+		console.log(colorSurface)
 		let _material;
 		let materialCircle;
 
@@ -445,8 +448,8 @@ function renderHoopBackground(group){
 			_material = new THREE.MeshStandardMaterial( {color: colorSurface, side: THREE.DoubleSide} )
 			materialCircle = new THREE.MeshStandardMaterial( {color: colorSurface, side: THREE.DoubleSide} )
 		}else{
-			_material = new THREE.MeshStandardMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
-			materialCircle = new THREE.MeshStandardMaterial( {color: 0x013CA6, opacity:0, transparent: true, side: THREE.DoubleSide} );
+			_material = new THREE.MeshStandardMaterial( {color: 0x283765, opacity:0, transparent: true, side: THREE.DoubleSide} );
+			materialCircle = new THREE.MeshStandardMaterial( {color: 0x283765, opacity:0, transparent: true, side: THREE.DoubleSide} );
 		}
 
 		const meshPlane = new THREE.Mesh(geometryPlane, _material)
@@ -579,11 +582,12 @@ function drawSideLinesTop(group){
 	group.add(line)
 }
 
-function drawThreePointerLineTop(group){
+function drawThreePointerLineTop(group, w, l){
 	let points = [];
 
-	points.push(0,0,-22)
-	points.push(14,0, -22);
+	w = 50;
+	points.push(0,0, -8 + (w/2) - 5)
+	points.push(14,0, -8 + (w/2) - 5);
 
 	let geometry = new LineGeometry();
 
@@ -596,12 +600,13 @@ function drawThreePointerLineTop(group){
 	group.add(line)
 }
 
-function drawThreePointerLineBottom(group){
+function drawThreePointerLineBottom(group, w, l){
 	let points = [];
 
 
-	points.push(0,0,6)
-	points.push(14,0, 6);
+	w = 50
+	points.push(0,0, -8 - (w/2) + 5)
+	points.push(14,0, -8 - (w/2) + 5);
 
 	let geometry = new LineGeometry();
 
@@ -615,16 +620,17 @@ function drawThreePointerLineBottom(group){
 
 }
 
-function drawThreePointer(group){
+function drawThreePointer(group, width, length){
 
-	drawThreePointerLineTop(group);
-	drawThreePointerLineBottom(group);
+	window.scene.children = window.scene.children.filter(x => x.name !== 'threePointerLine')
+	drawThreePointerLineTop(group, width, length);
+	drawThreePointerLineBottom(group, width, length);
 
     let points = [];
 
     // 360 full circle will be drawn clockwise
     for(let i = 0; i <= 180; i++){
-        points.push(Math.sin(i*(Math.PI/180))*14,0, Math.cos(i*(Math.PI/180))*14);
+        points.push(Math.sin(i*(Math.PI/180))*14,0, Math.cos(i*(Math.PI/180))*20);
     }	
 
 	let geometry = new LineGeometry();
@@ -637,6 +643,7 @@ function drawThreePointer(group){
 
     line._id = "lineBasketball"
 	line.position.set(14,0, -8)
+	group.name = "threePointerLine"
 	group.add(line)	
 
 /*	let pointz = [];
@@ -781,9 +788,9 @@ function drawHashBottom(group){
 
 function drawBaseLine(group){
 	let points = [];
-
-	points.push(0,0,6);
-	points.push(0,0,-22);
+	let w = 50
+	points.push(0,0,-8 + (w/2) - 5);
+	points.push(0,0,-8 - (w/2) + 5);
 
 	let geometry = new LineGeometry();
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../../public/static/assets/css/tennis/tennis.css";
 import { Helmet } from "react-helmet"
 import ColorPicker from "../../components/ColorPicker";
-import AdditionalLines from "../../components/AdditionalLines";
+import AdditionalLines	 from "../../components/AdditionalLines";
 import {Switcher, SwitcherNet } from "../../components/Switcher";
 import { WidthSlider, LongtitudeSlider } from "../../components/Slider";
 import Dropdown from "../../components/Dropdown";
@@ -10,33 +10,34 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { extend } from "@react-three/fiber";
-import { renderBasketball, removeBasketball, changeBasketballLinesPositions } from "../../renderBasketball";
-import { renderTennis, renderBorderAndSurface, renderBorder, removeBorder } from "../../renderTennis";
+import { renderBasketball, removeBasketball, changeBasketballLinesPositions, renderBorderAndSurface, renderBorder, renderBasketballLines } from "../../renderBasketball";
+import { renderTennis, removeBorder } from "../../renderTennis";
 import { renderPickleball, renderTwoPickleBallCourts } from "../../renderPickleball";
 import hexToRgb from "../../helpers/hexToRgb";
 import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 
-export default function Tennis(){
+export default function Basketball(){
 
 
 	let [ lights, setLights ] = useState([0,0,0,0,0,0])
 	let [ fences, setFences ] = useState([0,0,0,0]);
 	let [ rebounder, setRebounder ] = useState([0,0,0,0]);
 	let [ type, setType ] = useState('Laykold (Acrylic Coating) 🎨');
-	let [ surfaceColor, setSurfaceColor ] = useState('#000000');
-	let [ borderColor, setBorderColor ] = useState('#000000');
-	let [ tennisLineColor, setTennisLineColor ] = useState('#ffffff');
-	let [ tennisSurfaceColor, setTennisSurfaceColor ] = useState('#ffffff');
-	let [ defaultWidth, setDefaultWidth ] = useState(60)
-	let [ defaultLength, setDefaultLength ] = useState(120)
+	let [ surfaceColor, setSurfaceColor ] = useState('#055739');
+	let [ borderColor, setBorderColor ] = useState('#013ca6');
+	let [ basketballLineColor, setBasketballLineColor ] = useState('#ffffff');
+	let [ basketballSurfaceColor, setBasketballSurfaceColor ] = useState('#013ca6');
+	let [ defaultWidth, setDefaultWidth ] = useState(30)
+	let [ defaultLength, setDefaultLength ] = useState(60)
 	let [ basketballLines, setBasketballLines ] = useState([0,0,0,0,0])
 	let [ loading, setLoading ] = useState(false)
 	let [ zoomLevel, setZoomLevel ] = useState(0)
 	let renderer = useRef(null)
 	let camera = useRef(null);
 	let scene = useRef(null)
+	let tennisLineMaterial = useRef( new LineMaterial( { color: 0xffffff, linewidth: 0.002}) );
 	let loadedCounter = useRef(0);
 	let prevZoom = useRef(0);
 	let [ galleryFencesUsed, setGalleryFencesUsed ] = useState(false)
@@ -45,23 +46,22 @@ export default function Tennis(){
 		setType(value)
 
 		let surfaceColor;
-		let tennisSurfaceColor;
+		let basketballSurfaceColor;
 
 		if(value === 'Laykold (Acrylic Coating) 🎨'){
 			surfaceColor = '#055739'
-			tennisSurfaceColor = '#013ca6'
+			basketballSurfaceColor = '#013ca6'
 		}else{
-			surfaceColor = '#3b68b1';
-			tennisSurfaceColor = '#ff6632'
+			surfaceColor = '#3b68b1'
+			basketballSurfaceColor = '#ff6632'
 		}
 
 		window.scene.children.filter(x => x._id === 'basketballGroup').forEach(x => x.children.forEach(y => {
 			if(y.name === 'surfaceBasketball'){
-				// y.material.transparent = true;
-				// y.material.opacity = 0;
-				y.material.color = hexToRgb("#ffffff");
+				//y.material.transparent = true;
+				//y.material.opacity = 0;
 			}else{
-				y.material.color = hexToRgb("#ffffff");
+				//y.material.color = hexToRgb("#ffffff");
 			}
 		}))
 
@@ -71,11 +71,12 @@ export default function Tennis(){
 				y.material.opacity = 0;
 			}else{
 				y.material.color = hexToRgb("#ffffff");
+				y.material.opacity = 1;
 			}
 		}))
 
 		setSurfaceColor(surfaceColor)
-		setTennisSurfaceColor(tennisSurfaceColor)
+		setBasketballSurfaceColor(basketballSurfaceColor)
 	}
 	function onClickLights(e){
 		let pos = e.target.dataset.pos;
@@ -156,26 +157,58 @@ export default function Tennis(){
 			}
 		}
 
-		if(label === 'tennis_line'){
-			setTennisLineColor(color)
+		if(label === 'pickleball_line'){
+			setBasketballLineColor(color)
 		}
 
-		if(label === 'tennis_surface'){
-			setTennisSurfaceColor(color)
+		if(label === 'pickleball'){
+			if(color === '') color = surfaceColor;
+			setBasketballSurfaceColor(color)
 		}
 	}
 
 
 	function changeMainLineColor(color){
-		let lines = scene.current.children.filter(x => x._id === 'line');
+		let children = scene.current.children.filter(x => x._id === 'basketballGroup');
+		let middleLine = scene.current.children.filter(x => x.name === 'middleLine')
+		let basketballOutsideLines = scene.current.children.filter(x => x.name === 'basketballOutsideLines');
 
-		if(lines.length === 0) return;
+		let filter = null; 
+
+		if(children){
+			for(let i = 0; i < children.length; i++){	
+
+				console.log(children)
+				let _children = children[i].children.filter(x => x.name === 'lineBasketball' || x._id === 'lineBasketball')
+
+				console.log(_children)
+
+				_children.forEach(x =>{
+					console.log(x)
+						x.material.color = hexToRgb(color)
+						x.material.transparent = false;
+						x.material.opacity = 1;
+				})
+			}
+		}
+
+		if(middleLine){
+			middleLine.forEach(x => {
+				x.children.forEach(x => {
+					x.material.color = hexToRgb(color)
+				})
+			})
+		}
+
+		if(basketballOutsideLines){
+			basketballOutsideLines.forEach(x => {
+				x.children.forEach(x => {
+					x.material.color = hexToRgb(color)
+				})
+			})		
+		}
 
 		let _color = hexToRgb(color);
-
-		lines.forEach(x => {
-			x.material.color = _color;
-		})
 	}
 
 	function changeSurfaceColor(color){
@@ -200,22 +233,34 @@ export default function Tennis(){
 		}
 	}
 
-	function changeTennisSurfaceColor(color){
-		let plane = scene.current.children.filter(x => x.name === 'plane');
+	function changeBasketballSurfaceColor(color){
+		console.log('running')
+		let children = window.scene.children.filter(x => x._id === 'pickleballGroup')
 
-		if(plane.length === 0) return;
-
+		console.log(children)
+		if(!children) return;
 
 		let _color = hexToRgb(color)
 
-		if(color){
-			plane[0].material.color = _color;
-			plane[0].material.opacity = 1;
+		for(let i = 0; i < children.length; i++){
+			let _children = children[i].children.filter(x => x._id = 'linePickleball')
+
+
+			_children.forEach(x => {
+				if(x.name === 'surfacePickleball') {
+					console.log(x)
+					if(!color){
+						x.material.transparent = true;
+						x.material.opacity = 0;
+					}else{
+						x.material.color = hexToRgb(color)
+						x.material.transparent = false;
+						x.material.opacity = 1;
+					}
+				}
+			})
 		}
-		else {
-			plane[0].material.transparent = true;
-			plane[0].material.opacity = 0;
-		}
+
 	}
 
 
@@ -257,9 +302,9 @@ export default function Tennis(){
 		if(!scene.current) return;
 
 
-		changeMainLineColor(tennisLineColor);
+		changeMainLineColor(basketballLineColor);
 		window.renderer.render(window.scene, window.camera)
-	}, [tennisLineColor])
+	}, [basketballLineColor])
 
 	useEffect( () => {
 		if(!scene.current) return;
@@ -279,9 +324,9 @@ export default function Tennis(){
 		if(!scene.current) return;
 
 
-		changeTennisSurfaceColor(tennisSurfaceColor)
+		changeBasketballSurfaceColor(basketballSurfaceColor)
 		window.renderer.render(window.scene, window.camera)
-	}, [tennisSurfaceColor])
+	}, [basketballSurfaceColor])
 
 	useEffect( () => {
 		renderFence(fences, defaultWidth, defaultLength)
@@ -407,9 +452,7 @@ export default function Tennis(){
 		scene.current.add(hemiLight);
 
 
-		setTimeout( () => renderTennis(defaultWidth, defaultLength), 150)
-
-
+		//renderTennis(renderer.current, scene.current, camera.current, tennisLineMaterial.current)
     	controls.target.set(39, 0.1, -14);
     	controls.update();
 
@@ -438,9 +481,13 @@ export default function Tennis(){
 			renderer.current.render(scene.current, camera.current)
 		} );
 
-		renderer.current.render(scene.current, camera.current)
 
-		renderNet([1,0])
+		renderer.current.render(scene.current, camera.current)
+		setTimeout( () => {
+			renderBorderAndSurface(defaultWidth, defaultLength, true)
+			renderNet([0,1])
+			renderPickleball()
+		}, 150 )
 	}, [loading])
 
 	useEffect( () => {
@@ -455,12 +502,14 @@ export default function Tennis(){
 	useEffect( () => {
 		if(!window.scene) return;
 
-		changeBasketballLinesPositions(basketballLines, defaultWidth, defaultLength)
+		//changeBasketballLinesPositions(basketballLines, defaultWidth, defaultLength)
 		renderFence(fences, defaultWidth, defaultLength)
 		changeLightPositions(defaultWidth, defaultLength)
-		renderBorderAndSurface(defaultWidth, defaultLength);
+		renderBorderAndSurface(defaultWidth, defaultLength)
+		//renderBasketballLines(defaultWidth, defaultLength, false, hexToRgb(basketballLineColor))
+
 		if(galleryFencesUsed) { renderGallery(!galleryFencesUsed) }
-		window.renderer.render(window.scene, window.camera);
+		window.renderer.render(window.scene, window.camera)
 
 	}, [defaultWidth, defaultLength])
 
@@ -479,7 +528,7 @@ export default function Tennis(){
 				        </a>
 					</div>
 					<div>
-						<p>Surface</p>
+						<p>Surface options</p>
 
 						<Dropdown parentEffect={typeEffect} />
 					</div>
@@ -574,38 +623,46 @@ export default function Tennis(){
 
 						<div className='image-picker--container left-right'>
 							<div className="column-direction">
-								<label>Tennis line</label>
+								<label>Pickleball Surface</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_line" cc="#ffffff" />
+								<ColorPicker type={type} onChange={onChange} label="pickleball" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#00748d" }/>
 							</div>
 
 							<div className="column-direction">
-								<label>Tennis surface</label>
+								<label>Pickleball Lines</label>
 
-								<ColorPicker type={type} noColor={true} onChange={onChange} label="tennis_surface" cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632":"#2b426d"}/>
+								<ColorPicker type={type} addWhite={true} onChange={onChange} label="pickleball_line" cc="#ffffff" />
 							</div>
 						</div>
 					</div>
 
-					<div className="m-top1">
+					{/* <div className="m-top1">
 
 						<div className="align-center wrap additional-lines">
 							<p>Additional lines</p>
-							<AdditionalLines 
+							<AdditionalLines	 
 								defaultWidth={defaultWidth} 
 								defaultLength={defaultLength} 
 								basketballLines={basketballLines} 
 								setBasketballLines={setBasketballLines}
 								type={type}
-								excludePositions={[]}
+								isPickleball={true}
+								excludePositions={{3: true, 4: true}}
 							/>
 						</div>
 
-					</div>
+					</div> */}
 
 					<div className="mtop-1" style={{width:'85%'}}>
 						<div className="options align-center left-right relative">
-							<Switcher name="Hoops" imgName="hoop" width={defaultWidth} length={defaultLength} excludePositions={[]}/>
+							<Switcher 
+								name="Hoops" 
+								imgName="hoop" 
+								width={defaultWidth} 
+								length={defaultLength} 
+								hoopsDefault={[0,0,0,0,0]}
+								excludePositions={{3: true, 4: true}}
+							/>
 						</div>
 
 						<div className="options align-center left-right relative">
@@ -613,35 +670,30 @@ export default function Tennis(){
 						</div>
 					</div>
 
-					<div className="mtop-1">
-						<WidthSlider defaultValue={60} onChange={sliderOnChange} marks={
-							[
-								{
-								value: 50,
-								label: '50 ft',
-								},
-								{
-								value: 70,
-								label: '70 ft',
-								}
-							]
+					<div className="mtop-1 sliders">
+						<WidthSlider defaultValue={30} min={30} max={40} onChange={sliderOnChange} marks={
+							[{
+								value: 30,
+								label: '30 ft'
+							},
+							{
+								value: 40,
+								label: '40 ft'
+							}]
 						}/>
-						<LongtitudeSlider defaultValue={120} onChange={sliderOnChange}
-							marks={
-								[
-									{
-										value: 110,
-										label: '110 ft'
-									},
-									{
-										value:130,
-										label: '130 ft'
-									}
-								]
+						<LongtitudeSlider defaultValue={60} min={60} max={70} onChange={sliderOnChange} marks={[
+							{
+								value: 60,
+								label: '60 ft'
+							},
+							{
+								value:70,
+								label: '70 ft'
 							}
-						/>
+						]}/>
 					</div>
 
+					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
 		</>
 	)

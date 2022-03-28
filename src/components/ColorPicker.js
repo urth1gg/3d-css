@@ -23,7 +23,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 		let _colors = [];
 		let _colorNames = [];
 
-		if(type === 'Laykold acrylic coating'){
+		if(type === 'Laykold (Acrylic Coating) 🎨'){
 			_colors = [ 
 				'#21362d',
 				'#364e35',
@@ -186,12 +186,14 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 						setCurrentColor('','')
 					}}>
 						<div className="color-container" style={{border: '1px solid black', display:'flex', justifyContent:'center', alignItems: 'center'}}>
-							<i class="fas fa-ban" style={{fontSize: '55px', color: 'red'}}></i>
+							<i className="fas fa-ban" style={{fontSize: '22px', color: 'red'}}></i>
 						</div>
-						<h4 className='stroke' style={{color:'red'}}>No color</h4>
+						<h4 className='stroke' style={{color:'red'}}>No colour</h4>
 					</div>
 				}
 				{colors.map( (x,i,arr) => {
+
+					if(typeOption === 'surface' && colorNames[i] === 'White') return;
 					return (
 					<div className="color-wrapper" onClick={() => {
 						setCurrentColor(x, colorNames[i])
