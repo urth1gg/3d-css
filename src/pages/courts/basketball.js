@@ -17,6 +17,7 @@ import hexToRgb from "../../helpers/hexToRgb";
 import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
+import GetQuote from "../../components/GetQuote";
 
 export default function Basketball(){
 
@@ -409,7 +410,7 @@ export default function Basketball(){
 	useEffect( () => {
 		if(!loading) return;
 
-		renderer.current = new THREE.WebGLRenderer({alpha: true, antialias: true});
+		renderer.current = new THREE.WebGLRenderer({alpha: true, antialias: true, preserveDrawingBuffer: true});
 		window.renderer = renderer.current;
 		renderer.current.setSize( window.innerWidth, window.innerHeight );
 		//renderer.current.setClearColor( 0xffffff, 0, 0);
@@ -449,7 +450,8 @@ export default function Basketball(){
 			renderBasketballLines(defaultWidth, defaultLength, true)
 		} , 150)
 		setBasketballLines([...basketballLines])
-    	controls.target.set(39, 0.1, -14);
+    	//controls.target.set(39, 0.05, -14);
+    	controls.target.set(39.2, 0, -13.57);
     	controls.update();
 
 		controls.minPolarAngle = 0.9320850529728638
@@ -688,6 +690,8 @@ export default function Basketball(){
 
 					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
+
+				<GetQuote />
 		</>
 	)
 }

@@ -17,6 +17,7 @@ import hexToRgb from "../../helpers/hexToRgb";
 import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
+import GetQuote from "../../components/GetQuote";
 
 export default function Tennis(){
 
@@ -373,7 +374,7 @@ export default function Tennis(){
 	useEffect( () => {
 		if(!loading) return;
 
-		renderer.current = new THREE.WebGLRenderer({alpha: true, antialias: true});
+		renderer.current = new THREE.WebGLRenderer({alpha: true, antialias: true, preserveDrawingBuffer: true});
 		window.renderer = renderer.current;
 		renderer.current.setSize( window.innerWidth, window.innerHeight );
 		//renderer.current.setClearColor( 0xffffff, 0, 0);
@@ -613,7 +614,7 @@ export default function Tennis(){
 						</div>
 					</div>
 
-					<div className="mtop-1">
+					<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={60} onChange={sliderOnChange} marks={
 							[
 								{
@@ -642,7 +643,11 @@ export default function Tennis(){
 						/>
 					</div>
 
+					<span className="disclaimer">*Renderings are for illustrative purposes</span>
+
+
 				</div>
+				<GetQuote />
 		</>
 	)
 }

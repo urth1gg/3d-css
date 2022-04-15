@@ -66,7 +66,7 @@ export function renderBorderAndSurface(w,l, init){
 	let [ prevSurface, prevBorder ] = removeExistingBorderAndSurface();
 
 	const backgroundGeometry = new THREE.PlaneGeometry(w, l);
-	const borderGeometry = new THREE.PlaneGeometry(w + 12, l + 12 )
+	const borderGeometry = new THREE.PlaneGeometry(w + 2, l + 2 )
 	if(init){
 		
 		let surfaceColor = document.querySelector("input#surface") ? document.querySelector("input#surface").value : 0Xf49e23;
@@ -270,6 +270,7 @@ function renderLinesLeft(scene, width, length){
 	group._id = "basketballGroup";
 	group.name = "basketballLinesLeft"
 	group.position.set(-((length-78)/2)+0.2,0.04,-5.50)
+
 	scene.add(group)
 }
 
