@@ -151,13 +151,15 @@ export default function AdditionalLines({
 
 
 					_children.forEach(x =>{
+						console.log(color)
+						console.log('adi lines')
 						if(x.name === 'surfaceBasketball') {
 							if(!color){
 								x.material.transparent = true;
 								x.material.opacity = 0;
 							}else{
 								x.material.color = hexToRgb(color)
-								x.material.transparent = false;
+								x.material.transparent = true;
 								x.material.opacity = 1;
 							}
 							

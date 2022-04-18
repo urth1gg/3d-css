@@ -163,7 +163,6 @@ export default function Basketball(){
 		}
 
 		if(label === 'basketball_surface'){
-			if(color === '') color = surfaceColor;
 			setBasketballSurfaceColor(color)
 		}
 	}
@@ -247,9 +246,14 @@ export default function Basketball(){
 
 			_children.forEach(x =>{
 				if(x.name === 'surfaceBasketball') {
-					x.material.color = hexToRgb(color)
-					x.material.transparent = false;
-					x.material.opacity = 1;
+					if(!color){
+						x.material.opacity = 0;
+						x.material.transparent = true;
+					}else{
+						x.material.color = hexToRgb(color)
+						x.material.transparent = true;
+						x.material.opacity = 1;
+					}
 				}
 			})
 		}
@@ -317,6 +321,7 @@ export default function Basketball(){
 		if(!scene.current) return;
 
 
+	
 		changeBasketballSurfaceColor(basketballSurfaceColor)
 		window.renderer.render(window.scene, window.camera)
 	}, [basketballSurfaceColor])
@@ -614,7 +619,7 @@ export default function Basketball(){
 							</div>
 						</div>
 
-						<div className='image-picker--container left-right'>
+						{/* <div className='image-picker--container left-right'>
 							<div className="column-direction">
 								<label>Basketball Surface</label>
 
@@ -626,7 +631,7 @@ export default function Basketball(){
 
 								<ColorPicker type={type} addWhite={true} onChange={onChange} label="basketball_line" cc="#ffffff" />
 							</div>
-						</div>
+						</div> */}
 					</div>
 
 					<div className="m-top1">
@@ -682,9 +687,9 @@ export default function Basketball(){
 								label: '60 ft'
 							}]
 						}/>
-						<LongtitudeSlider defaultValue={120} min={85} max={120} onChange={sliderOnChange} marks={[
+						<LongtitudeSlider defaultValue={120} min={110} max={120} onChange={sliderOnChange} marks={[
 							{
-								value: 85,
+								value: 110,
 								label: '110 ft'
 							},
 							{

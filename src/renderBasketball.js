@@ -438,7 +438,7 @@ function renderHoopBackground(group){
 		const geometryCircle = new THREE.CircleGeometry(5,50)
 
 
-		let colorSurface = document.querySelector("input#basketball_surface") ? document.querySelector("input#basketball_surface").value : document.querySelector("input#basketball_surface").value;
+		let colorSurface = document.querySelector("input#basketball_surface") ? document.querySelector("input#basketball_surface").value : document.querySelector("input#basketball").value;
 
 		console.log(colorSurface)
 
