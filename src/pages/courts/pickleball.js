@@ -18,6 +18,7 @@ import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 import GetQuote from "../../components/GetQuote";
+import MobileMenu from "../../components/MobileMenu";
 
 export default function Basketball(){
 
@@ -523,6 +524,9 @@ export default function Basketball(){
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css" />
 			</Helmet>
 			<div className="left-menu">
+					<i class="fas fa-angle-double-left" onClick={() =>{
+						document.querySelector(".left-menu").style.display = 'none'
+					}}></i>
 					<div className="center mbot-1">
 				        <a className="logo-img-css" href={generateHref()}>
 				            <img src={generateImage()} alt={generateAlt()} />
@@ -600,6 +604,9 @@ export default function Basketball(){
 				</div>
 
 				<div className="right-menu">
+					<i class="fas fa-angle-double-right" onClick={() =>{
+						document.querySelector(".right-menu").style.display = 'none'
+					}}></i>
 
 					<div className="mtop-1">
 						<div className="image-picker--container left-right">
@@ -671,7 +678,12 @@ export default function Basketball(){
 						</div>
 					</div>
 
-					<div className="mtop-1 sliders">
+					
+					<span className="disclaimer">*Renderings are for illustrative purposes</span>
+				</div>
+				<GetQuote />
+				<MobileMenu />
+				<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={30} min={30} max={40} onChange={sliderOnChange} marks={
 							[{
 								value: 30,
@@ -692,11 +704,8 @@ export default function Basketball(){
 								label: '70 ft'
 							}
 						]}/>
-					</div>
-
-					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
-				<GetQuote />
+
 		</>
 	)
 }

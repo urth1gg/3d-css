@@ -18,6 +18,7 @@ import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 import GetQuote from "../../components/GetQuote";
+import MobileMenu from "../../components/MobileMenu";
 
 export default function Basketball(){
 
@@ -26,7 +27,7 @@ export default function Basketball(){
 	let [ fences, setFences ] = useState([0,0,0,0]);
 	let [ rebounder, setRebounder ] = useState([0,0,0,0]);
 	let [ type, setType ] = useState('Laykold (Acrylic Coating) 🎨');
-	let [ surfaceColor, setSurfaceColor ] = useState('#f49e23');
+	let [ surfaceColor, setSurfaceColor ] = useState('#055739');
 	let [ borderColor, setBorderColor ] = useState('#013ca6');
 	let [ basketballLineColor, setBasketballLineColor ] = useState('#ffffff');
 	let [ basketballSurfaceColor, setBasketballSurfaceColor ] = useState('#013ca6');
@@ -506,6 +507,11 @@ export default function Basketball(){
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css" />
 			</Helmet>
 			<div className="left-menu">
+
+					<i class="fas fa-angle-double-left" onClick={() =>{
+						document.querySelector(".left-menu").style.display = 'none'
+					}}></i>
+
 					<div className="center mbot-1">
 				        <a className="logo-img-css" href={generateHref()}>
 				            <img src={generateImage()} alt={generateAlt()} />
@@ -583,7 +589,10 @@ export default function Basketball(){
 				</div>
 
 				<div className="right-menu">
-
+					<i class="fas fa-angle-double-right" onClick={() =>{
+						document.querySelector(".right-menu").style.display = 'none'
+					}}></i>
+					
 					<div className="mtop-1">
 						<div className="image-picker--container left-right">
 
@@ -592,7 +601,7 @@ export default function Basketball(){
 								<ColorPicker type={type} 
 								onChange={onChange} 
 								label="surface" 
-								cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#3b68b1" : "#eb7203"}
+								cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#3b68b1" : "#055739"}
 								w={defaultWidth}
 								l={defaultLength}
 								/>
@@ -609,7 +618,7 @@ export default function Basketball(){
 							<div className="column-direction">
 								<label>Basketball Surface</label>
 
-								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#013ca6" }/>
+								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#0082ca" }/>
 							</div>
 
 							<div className="column-direction">
@@ -633,6 +642,7 @@ export default function Basketball(){
 								excludePositions={{1: true, 2: true}}
                                 shouldRenderTennis={true}
 								isMultisport={true}
+								ccTennis="#472b67"
 							/>
 						</div>
 
@@ -657,7 +667,11 @@ export default function Basketball(){
 						</div>
 					</div>
 
-					<div className="mtop-1 sliders">
+					<span className="disclaimer">*Renderings are for illustrative purposes</span>
+				</div>
+				<GetQuote />
+				<MobileMenu />
+				<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={60} min={50} max={60} onChange={sliderOnChange} marks={
 							[{
 								value: 50,
@@ -679,10 +693,6 @@ export default function Basketball(){
 							}
 						]}/>
 					</div>
-
-					<span className="disclaimer">*Renderings are for illustrative purposes</span>
-				</div>
-				<GetQuote />
 		</>
 	)
 }

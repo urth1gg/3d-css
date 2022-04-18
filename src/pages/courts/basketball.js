@@ -18,6 +18,7 @@ import addSpotlight from "../../helpers/addSpotlight";
 import { renderFence, renderLight, renderNet, changeFencePositions, changeLightPositions, renderGallery } from "../../render3DElements";
 import Animated from "../../components/Animated";
 import GetQuote from "../../components/GetQuote";
+import MobileMenu from "../../components/MobileMenu";
 
 export default function Basketball(){
 
@@ -516,6 +517,11 @@ export default function Basketball(){
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css" />
 			</Helmet>
 			<div className="left-menu">
+
+					<i class="fas fa-angle-double-left" onClick={() =>{
+						document.querySelector(".left-menu").style.display = 'none'
+					}}></i>
+
 					<div className="center mbot-1">
 				        <a className="logo-img-css" href={generateHref()}>
 				            <img src={generateImage()} alt={generateAlt()} />
@@ -593,6 +599,9 @@ export default function Basketball(){
 				</div>
 
 				<div className="right-menu">
+					<i class="fas fa-angle-double-right" onClick={() =>{
+						document.querySelector(".right-menu").style.display = 'none'
+					}}></i>
 
 					<div className="mtop-1">
 						<div className="image-picker--container left-right">
@@ -692,6 +701,30 @@ export default function Basketball(){
 				</div>
 
 				<GetQuote />
+				<MobileMenu />
+				<div className="mtop-1 sliders">
+						<WidthSlider defaultValue={50} min={40} max={60} onChange={sliderOnChange} marks={
+							[{
+								value: 40,
+								label: '40 ft'
+							},
+							{
+								value: 60,
+								label: '60 ft'
+							}]
+						}/>
+						<LongtitudeSlider defaultValue={90} min={80} max={100} onChange={sliderOnChange} marks={[
+							{
+								value: 80,
+								label: '80 ft'
+							},
+							{
+								value:100,
+								label: '100 ft'
+							}
+						]}/>
+				</div>
+
 		</>
 	)
 }

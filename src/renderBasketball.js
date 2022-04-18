@@ -438,9 +438,11 @@ function renderHoopBackground(group){
 		const geometryCircle = new THREE.CircleGeometry(5,50)
 
 
-		let colorSurface = document.querySelector("input#basketball") ? document.querySelector("input#basketball").value : document.querySelector("input#basketball_surface").value;
+		let colorSurface = document.querySelector("input#basketball_surface") ? document.querySelector("input#basketball_surface").value : document.querySelector("input#basketball_surface").value;
 
 		console.log(colorSurface)
+
+		console.log('basketball')
 		let _material;
 		let materialCircle;
 
@@ -907,7 +909,6 @@ export function renderBasketballLines(w,l, init, color){
 	group.name = "basketballOutsideLines"
 	renderOutsideLines(w,l, group, init, shouldRenderMiddlePart, color)
 
-	console.log(group)
 	window.scene.add(group)
 	window.renderer.render(window.scene, window.camera)
 }
