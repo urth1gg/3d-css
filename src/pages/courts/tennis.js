@@ -176,7 +176,14 @@ export default function Tennis(){
 		let _color = hexToRgb(color);
 
 		lines.forEach(x => {
-			x.material.color = _color;
+			if(!color){
+				x.material.transparent = true;
+				x.material.opacity = 0;
+			}else{
+				x.material.color = _color;
+				x.material.opacity = 1;
+				x.material.transparent = true;
+			}
 		})
 	}
 
@@ -584,7 +591,7 @@ export default function Tennis(){
 							<div className="column-direction">
 								<label>Tennis line</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_line" cc="#ffffff" />
+								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_line" cc2="#ffffff" _typeOption="lines" />
 							</div>
 
 							<div className="column-direction">
@@ -606,6 +613,7 @@ export default function Tennis(){
 								setBasketballLines={setBasketballLines}
 								type={type}
 								excludePositions={[]}
+								disableShowMore={true}
 							/>
 						</div>
 

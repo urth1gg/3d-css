@@ -619,9 +619,9 @@ export default function Basketball(){
 							</div>
 						</div>
 
-						{/* <div className='image-picker--container left-right'>
+						<div className='image-picker--container left-right'>
 							<div className="column-direction">
-								<label>Basketball Surface</label>
+								<label>Basketball Key</label>
 
 								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#0082ca" }/>
 							</div>
@@ -631,7 +631,7 @@ export default function Basketball(){
 
 								<ColorPicker type={type} addWhite={true} onChange={onChange} label="basketball_line" cc="#ffffff" />
 							</div>
-						</div> */}
+						</div>
 					</div>
 
 					<div className="m-top1">

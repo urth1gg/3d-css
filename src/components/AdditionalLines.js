@@ -9,7 +9,7 @@ import { renderTennis } from "../renderTennis";
 export default function AdditionalLines({
 		defaultWidth, defaultLength, basketballLines, 
 		setBasketballLines, type, excludePositions, isBasketball, isPickleball,
-		shouldRenderTennis, isMultisport, ccTennis
+		shouldRenderTennis, isMultisport, ccTennis, disableShowMore
 	}){
 	let [ lines, setLines ] = useState([0,0]);
 	let [ showPickleballSelector, setShowPickleballSelector ] = useState(false);
@@ -20,8 +20,11 @@ export default function AdditionalLines({
 	
 
 	useEffect( () => {
-		setTennisClicked(true)
-		setTimeout( () => renderTennis(defaultWidth, defaultLength, true, (ccTennis || '#055739')), 150)
+		if(shouldRenderTennis){
+			setTennisClicked(true)
+			setTimeout( () => renderTennis(defaultWidth, defaultLength, true, (ccTennis || '#055739')), 150)
+		} 
+
 	}, [shouldRenderTennis])
 	function onClick(e){
 		let pos = e.target.dataset.pos;
@@ -320,7 +323,7 @@ export default function AdditionalLines({
 			</div>	
 			}
 
-			{!isBasketball &&  <h4 style={{textAlign:'center', color: '#007ABA',cursor:'pointer', marginBottom:0, width:'100%'}} onClick={showMoreHandler}>{!showMore ? 'SHOW MORE' : 'SHOW LESS'}</h4> }	
+			{ (!isBasketball && !disableShowMore ) &&  <h4 style={{textAlign:'center', color: '#007ABA',cursor:'pointer', marginBottom:0, width:'100%'}} onClick={showMoreHandler}>{!showMore ? 'SHOW MORE' : 'SHOW LESS'}</h4> }	
 			
 			{showPickleballSelector && 
 	

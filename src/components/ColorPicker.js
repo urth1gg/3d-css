@@ -4,14 +4,14 @@ import { changeFencePositions } from "../render3DElements";
 
 //((?<=(\:+\s))(\#.+(?="))) 
 
-export default function ColorPicker({type, additionalOptions, onChange, label, addWhite, cc, cc2, noColor,w,l,name}){
+export default function ColorPicker({type, additionalOptions, onChange, label, addWhite, cc, cc2, noColor, _typeOption}){
 	const [showColors, setShowColors ] = useState(false)
 	const [ colors, setColors ] = useState([])
 	const [colorNames, setColorNames] = useState([])
 	const handler = useRef(null)
 	const [ currentColor, _setCurrentColor ] = useState(false)
 	const [ currentColorLines , _setCurrentColorLines ] = useState(false)
-	const [ typeOption, changeTypeOption ] = useState('surface')
+	const [ typeOption, changeTypeOption ] = useState(_typeOption || 'surface')
 
 	function close(){
 		setShowColors(false)
@@ -124,6 +124,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 
 
 		if(additionalOptions || addWhite){
+			console.log('add')
 			_colorNames.unshift("White")
 			_colors.unshift("#ffffff")
 		}
@@ -181,7 +182,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 					<div className={typeOption === 'surface' ? 'selected' : ''} onClick={(e) => changeTypeOptionHandler(e,'surface')}>Surface</div>
 					<div className={typeOption === 'lines' ? 'selected' : ''} onClick={(e) => changeTypeOptionHandler(e,'lines')}>Lines</div>
 				</div>}
-				{noColor && 
+				{ (noColor && typeOption === 'surface') && 
 					<div className="color-wrapper" onClick={() => {
 						setCurrentColor('','')
 					}}>
@@ -196,6 +197,7 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 					if(typeOption === 'surface' && colorNames[i] === 'White') return;
 					return (
 					<div className="color-wrapper" onClick={() => {
+						console.log(x, colorNames[i])
 						setCurrentColor(x, colorNames[i])
 					}} key={x}>
 						<div className="color-container" style={{backgroundColor: x, border:'1px solid black'}}></div>
@@ -207,9 +209,9 @@ export default function ColorPicker({type, additionalOptions, onChange, label, a
 			</div>
 
 			<div className="picked-colors-container">
-				<div id={label} data-color={currentColor ? currentColor.toString() : ''} className={currentColor ? 'visible' : 'hidden'} style={{backgroundColor: currentColor, height:'25px', width:'25px', marginTop:'15px'}}>
+				{typeOption === 'surface' && <div id={label} data-color={currentColor ? currentColor.toString() : ''} className={currentColor ? 'visible' : 'hidden'} style={{backgroundColor: currentColor, height:'25px', width:'25px', marginTop:'15px'}}/> }
 
-				</div>
+				{typeOption !== 'surface' && <div id={label} data-color={currentColorLines ? currentColorLines.toString() : ''} className={currentColorLines ? 'visible' : 'hidden'} style={{backgroundColor: currentColorLines, height:'25px', width:'25px', marginTop:'15px'}}/> }
 
 				{additionalOptions && <div className={currentColorLines ? 'visible' : 'hidden'} style={{backgroundColor: currentColorLines, height:'25px', width:'25px', marginTop:'15px'}}>
 

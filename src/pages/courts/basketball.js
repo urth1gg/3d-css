@@ -626,7 +626,7 @@ export default function Basketball(){
 
 						<div className='image-picker--container left-right'>
 							<div className="column-direction">
-								<label>Basketball Surface</label>
+								<label>Basketball Key</label>
 
 								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#013ca6" }/>
 							</div>
@@ -672,29 +672,6 @@ export default function Basketball(){
 						<div className="options align-center left-right relative">
 							{/*<SwitcherNet name="Nets" imgName="net" />*/}
 						</div>
-					</div>
-
-					<div className="mtop-1 sliders">
-						<WidthSlider defaultValue={50} min={40} max={60} onChange={sliderOnChange} marks={
-							[{
-								value: 40,
-								label: '40 ft'
-							},
-							{
-								value: 60,
-								label: '60 ft'
-							}]
-						}/>
-						<LongtitudeSlider defaultValue={90} min={80} max={100} onChange={sliderOnChange} marks={[
-							{
-								value: 80,
-								label: '80 ft'
-							},
-							{
-								value:100,
-								label: '100 ft'
-							}
-						]}/>
 					</div>
 
 					<span className="disclaimer">*Renderings are for illustrative purposes</span>
