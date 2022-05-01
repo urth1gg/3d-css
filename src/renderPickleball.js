@@ -79,11 +79,30 @@ export function renderPickleball(){
 		group.add(line5)
 
 		pickleballSurface(group, 22, -10)
+
+		if(document.location.pathname.endsWith("pickleball")) pickleballKitchen(group,44,-20);
+
 		group.position.z = -3.5
 		group.position.x = 17
 
 		group._id = "pickleballGroup"
+		group.name = "pickleballGroup"
 		scene.add(group)
+}
+
+function generateKitchenSurfaceMaterial(){
+	let inp = document.querySelector("#kitchen") ? document.querySelector("#kitchen").value : ''; 
+
+	let material 
+
+	console.log(inp)
+	if(inp !== "false" && inp !== '' && inp){
+	  material = new THREE.MeshStandardMaterial({ color: inp, side: THREE.DoubleSide, transparent:true, opacity: 1})
+	}else{
+      material = new THREE.MeshStandardMaterial( { color: 0x000000, transparent: true, opacity: 0, side: THREE.DoubleSide})
+	}
+
+	return material
 }
 
 export function renderTwoPickleBallCourts(){
@@ -205,9 +224,9 @@ function generatePickleballSurfaceMaterial(){
 	let material 
 
 	if(inp !== "false" && inp !== ''){
-	  material = new THREE.MeshBasicMaterial({ color: inp, side: THREE.DoubleSide})
+	  material = new THREE.MeshStandardMaterial({ color: inp, side: THREE.DoubleSide})
 	}else{
-      material = new THREE.MeshBasicMaterial( { color: 0x000000, transparent: true, opacity: 0, side: THREE.DoubleSide})
+      material = new THREE.MeshStandardMaterial( { color: 0x000000, transparent: true, opacity: 0, side: THREE.DoubleSide})
 	}
 
 	return material
@@ -229,6 +248,19 @@ function pickleballSurface(group, x, z){
 	group.add(mesh)
 }
 
+function pickleballKitchen(group, x, z){
+	let g = new THREE.PlaneGeometry(20,14)
+
+	let material = generateKitchenSurfaceMaterial();
+
+	let mesh = new THREE.Mesh(g, material);
+	mesh.rotation.set(Math.PI / 2, 0, Math.PI / 2);
+
+	mesh.position.x = x / 2
+	mesh.position.z = z / 2
+	mesh.name = "kitchen"
+	group.add(mesh)
+}
 function generateLinesMaterial(){
 	let material
 

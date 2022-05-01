@@ -28,7 +28,7 @@ export default function Basketball(){
 	let [ rebounder, setRebounder ] = useState([0,0,0,0]);
 	let [ type, setType ] = useState('Laykold (Acrylic Coating) 🎨');
 	let [ surfaceColor, setSurfaceColor ] = useState('#055739');
-	let [ borderColor, setBorderColor ] = useState('#013ca6');
+	let [ kitchenColor, setKitchenColor ] = useState('#055739');
 	let [ basketballLineColor, setBasketballLineColor ] = useState('#ffffff');
 	let [ basketballSurfaceColor, setBasketballSurfaceColor ] = useState('#013ca6');
 	let [ defaultWidth, setDefaultWidth ] = useState(30)
@@ -154,7 +154,6 @@ export default function Basketball(){
 				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
 
 			}else{
-				setBorderColor(color)
 				setTimeout( () => changeFencePositions(defaultWidth, defaultLength), 100)
 			}
 		}
@@ -166,6 +165,10 @@ export default function Basketball(){
 		if(label === 'pickleball'){
 			if(color === '') color = surfaceColor;
 			setBasketballSurfaceColor(color)
+		}
+
+		if(label === 'kitchen'){
+			setKitchenColor(color)
 		}
 	}
 
@@ -221,18 +224,6 @@ export default function Basketball(){
 		let _color = hexToRgb(color)
 
 		surface[0].material.color = _color
-	}
-
-	function changeBorderColor(color){
-		let border = scene.current.children.filter(x => x.name === 'border');
-
-		if(border.length === 0) {
-			renderBorder(defaultWidth, defaultLength, color)
-		}else{
-			let _color = hexToRgb(color)
-
-			border[0].material.color = _color
-		}
 	}
 
 	function changeBasketballSurfaceColor(color){
@@ -301,7 +292,7 @@ export default function Basketball(){
 	}
 
 	useEffect(() => {
-		if(!scene.current) return;
+		if(!window.scene) return;
 
 
 		changeMainLineColor(basketballLineColor);
@@ -309,21 +300,40 @@ export default function Basketball(){
 	}, [basketballLineColor])
 
 	useEffect( () => {
-		if(!scene.current) return;
+		if(!window.scene) return;
 
 		changeSurfaceColor(surfaceColor)
 		window.renderer.render(window.scene, window.camera)
 	}, [surfaceColor])
 
 	useEffect( () => {
-		if(!scene.current) return;
+		console.log('changed')
+		if(!window.scene) return;
 
-		changeBorderColor(borderColor)
+		let pbGroup = window.scene.children.filter(x => x.name === 'pickleballGroup');
+
+		if(pbGroup.length === 0) return;
+
+		let pbGroupChildren = pbGroup[0].children;
+
+		let surface = pbGroupChildren.filter(x => x.name === 'kitchen');
+
+		if(surface.length === 0) return;
+
+		let _color = hexToRgb(kitchenColor)
+
+		if(kitchenColor){
+			surface[0].material.color = _color
+			surface[0].material.opacity = 1;
+		}else{
+			surface[0].material.opacity = 0;
+		}
+
 		window.renderer.render(window.scene, window.camera)
-	}, [borderColor])
+	}, [kitchenColor])
 
 	useEffect( () => {
-		if(!scene.current) return;
+		if(!window.scene) return;
 
 
 		changeBasketballSurfaceColor(basketballSurfaceColor)
@@ -623,9 +633,9 @@ export default function Basketball(){
 							</div>
 
 							<div className="column-direction">
-								<label>Border</label>
+								<label>Kitchen</label>
 
-								<ColorPicker w={defaultWidth} l={defaultLength} type={type} onChange={onChange} noColor={true} name="border" label="border" cc="#ffffff" />
+								<ColorPicker w={defaultWidth} l={defaultLength} type={type} onChange={onChange} noColor={true} name="kitchen" label="kitchen" cc="#ffffff" />
 							</div>
 						</div>
 
@@ -681,7 +691,7 @@ export default function Basketball(){
 					
 					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
-				<GetQuote />
+				<GetQuote courtName="Pickleball" />
 				<MobileMenu />
 				<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={30} min={30} max={40} onChange={sliderOnChange} marks={

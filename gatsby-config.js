@@ -4,4 +4,5 @@ module.exports = {
     title: "Gatsby3D",
   },
   plugins: ["gatsby-plugin-styled-components"],
+  pathPrefix: '/design-a-court'
 };

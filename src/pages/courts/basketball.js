@@ -677,7 +677,7 @@ export default function Basketball(){
 					<span className="disclaimer">*Renderings are for illustrative purposes</span>
 				</div>
 
-				<GetQuote />
+				<GetQuote courtName="Basketball" />
 				<MobileMenu />
 				<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={50} min={40} max={60} onChange={sliderOnChange} marks={

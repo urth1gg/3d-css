@@ -633,7 +633,7 @@ export default function Tennis(){
 
 
 				</div>
-				<GetQuote />
+				<GetQuote courtName="Tennis" />
 				<MobileMenu />
 				<div className="mtop-1 sliders">
 						<WidthSlider defaultValue={60} onChange={sliderOnChange} marks={
