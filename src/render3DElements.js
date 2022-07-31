@@ -613,10 +613,10 @@ function renderFenceLeft(fbx, width, length){
 	let currentWidth =  box.max.x - box.min.x
 	
 
-	let maxFences = Math.floor((width + 2) / 20);
-	let remainder = (width + 2) % 20
+	let maxFences = Math.floor((width + 2) / 10);
+	let remainder = (width + 2) % 10
 
-	let desiredWidth = 20 + (remainder / maxFences)
+	let desiredWidth = 10 + (remainder / maxFences)
 
 	let ratio = desiredWidth / currentWidth
 
@@ -651,10 +651,10 @@ function renderFenceTop(fbx, width, length){
 	var box = new THREE.Box3().setFromObject( one )
 	let currentLength =  box.max.x - box.min.x
 
-	let maxFences = Math.floor((length + 2) / 20);
-	let remainder = (length + 2) % 20
+	let maxFences = Math.floor((length + 2) / 10);
+	let remainder = (length + 2) % 10
 
-	let desiredLength = 20 + (remainder / maxFences)
+	let desiredLength = 10 + (remainder / maxFences)
 
 	let ratio = desiredLength / currentLength
 
@@ -687,10 +687,10 @@ function renderFenceBottom(fbx, width, length){
 	var box = new THREE.Box3().setFromObject( one )
 	let currentLength =  box.max.x - box.min.x
 
-	let maxFences = Math.floor((length + 2) / 20);
-	let remainder = (length + 2) % 20
+	let maxFences = Math.floor((length + 2) / 10);
+	let remainder = (length + 2) % 10
 
-	let desiredLength = 20 + (remainder / maxFences)
+	let desiredLength = 10 + (remainder / maxFences)
 
 	let ratio = desiredLength / currentLength
 
@@ -726,10 +726,10 @@ function renderFenceRight(fbx, width, length){
 	let currentWidth =  box.max.x - box.min.x
 	
 
-	let maxFences = Math.floor((width + 2) / 20);
-	let remainder = (width + 2) % 20
+	let maxFences = Math.floor((width + 2) / 10);
+	let remainder = (width + 2) % 10
 
-	let desiredWidth = 20 + (remainder / maxFences)
+	let desiredWidth = 10 + (remainder / maxFences)
 
 	let ratio = desiredWidth / currentWidth
 
@@ -770,10 +770,10 @@ export function changeFencePositions(width, length, num){
 		var box = new THREE.Box3().setFromObject( fenceLeft[0].children[0] )
 		let currentWidth =  box.max.z - box.min.z
 
-		let maxFences = Math.floor((width + 2) / 20);
-		let remainder = (width + 2) % 20
+		let maxFences = Math.floor((width + 2) / 10);
+		let remainder = (width + 2) % 10
 
-		let desiredWidth = 20 + (remainder / maxFences)
+		let desiredWidth = 10 + (remainder / maxFences)
 
 		let ratio = desiredWidth / currentWidth
 
@@ -800,10 +800,10 @@ export function changeFencePositions(width, length, num){
 		var box = new THREE.Box3().setFromObject( fenceRight[0].children[0] )
 		let currentWidth =  box.max.z - box.min.z
 
-		let maxFences = Math.floor((width + 2) / 20);
-		let remainder = (width + 2) % 20
+		let maxFences = Math.floor((width + 2) / 10);
+		let remainder = (width + 2) % 10
 
-		let desiredWidth = 20 + (remainder / maxFences)
+		let desiredWidth = 10 + (remainder / maxFences)
 
 		let ratio = desiredWidth / currentWidth
 
@@ -830,10 +830,10 @@ export function changeFencePositions(width, length, num){
 		var box = new THREE.Box3().setFromObject( fenceTop[0].children[0] )
 		let currentLength =  box.max.x - box.min.x
 
-		let maxFences = Math.floor((length + 2) / 20);
-		let remainder = (length + 2) % 20
+		let maxFences = Math.floor((length + 2) / 10);
+		let remainder = (length + 2) % 10
 
-		let desiredLength = 20 + (remainder / maxFences)
+		let desiredLength = 10 + (remainder / maxFences)
 
 		let ratio = desiredLength / currentLength
 

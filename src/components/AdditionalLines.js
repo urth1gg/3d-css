@@ -154,8 +154,6 @@ export default function AdditionalLines({
 
 
 					_children.forEach(x =>{
-						console.log(color)
-						console.log('adi lines')
 						if(x.name === 'surfaceBasketball') {
 							if(!color){
 								x.material.transparent = true;

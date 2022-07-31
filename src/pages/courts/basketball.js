@@ -440,8 +440,8 @@ export default function Basketball(){
 		window.controls = controls;
 
 
-		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1.5);
-		hemiLight.position.set(0,50,0)
+		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1);
+		hemiLight.position.set(0,25,0)
 		scene.current.add(hemiLight);
 
 

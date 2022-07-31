@@ -44,6 +44,31 @@ export default function Basketball(){
 	let prevZoom = useRef(0);
 	let [ galleryFencesUsed, setGalleryFencesUsed ] = useState(false)
 
+
+	function setTennisLines(color){
+			let children = window.scene.children.filter(x => x.name === 'line')
+
+			console.log(children)
+			children.forEach(x => x.material.color = hexToRgb(color))
+	}
+
+	function setTennisSurfaceColor(color){
+			let children = window.scene.children.filter(x => x.name === 'plane')
+
+			if(color){
+				children.forEach(x => {
+					x.material.color = hexToRgb(color)
+					x.material.opacity = 1
+				})
+			}else{
+				children.forEach(x => {
+					x.material.color = hexToRgb(color)
+					x.material.opacity = 0;
+					x.material.transparent = true;
+				})
+			}
+	}
+
 	function typeEffect(value){
 		setType(value)
 
@@ -158,12 +183,12 @@ export default function Basketball(){
 			}
 		}
 
-		if(label === 'basketball_line'){
-			setBasketballLineColor(color)
+		if(label === 'tennis_line'){
+			setTennisLines(color)
 		}
 
-		if(label === 'basketball_surface'){
-			setBasketballSurfaceColor(color)
+		if(label === 'tennis_surface'){
+			setTennisSurfaceColor(color)
 		}
 	}
 
@@ -437,8 +462,8 @@ export default function Basketball(){
 		window.controls = controls;
 
 
-		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1.5);
-		hemiLight.position.set(0,50,0)
+		let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1);
+		hemiLight.position.set(0,25,0)
 		scene.current.add(hemiLight);
 
 
@@ -621,15 +646,15 @@ export default function Basketball(){
 
 						<div className='image-picker--container left-right'>
 							<div className="column-direction">
-								<label>Basketball Key</label>
+								<label>Tennis Court</label>
 
-								<ColorPicker type={type} onChange={onChange} label="basketball_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#0082ca" }/>
+								<ColorPicker type={type} onChange={onChange} label="tennis_surface" noColor={true} cc={type !== 'Laykold (Acrylic Coating) 🎨' ? "#ff6632" : "#472b67" }/>
 							</div>
 
 							<div className="column-direction">
-								<label>Basketball Lines</label>
+								<label>Tennis Court Lines</label>
 
-								<ColorPicker type={type} addWhite={true} onChange={onChange} label="basketball_line" cc="#ffffff" />
+								<ColorPicker type={type} addWhite={true} onChange={onChange} label="tennis_line" cc="#ffffff" />
 							</div>
 						</div>
 					</div>
