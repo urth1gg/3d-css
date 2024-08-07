@@ -51,7 +51,7 @@ const styles = {
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: '15',
+        zIndex: '102',
         padding:'1rem'
     }
 }
