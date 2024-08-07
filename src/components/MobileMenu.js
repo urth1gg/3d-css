@@ -14,12 +14,12 @@ export default function MobileMenu(){
     return(
         <>
             <div className="left-menu-show" onClick={onClickLeft}>
-                <i class="fas fa-angle-double-right"></i>
+                <i className="fas fa-angle-double-right"></i>
             </div>
 
 
             <div className="right-menu-show" onClick={onClickRight}>
-                <i class="fas fa-angle-double-left"></i>
+                <i className="fas fa-angle-double-left"></i>
             </div>
         </>
     )

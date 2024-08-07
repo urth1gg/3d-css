@@ -374,10 +374,14 @@ header{
 	top:50%;
 	transform:translate(-50%, -50%);
 	width:600px;
-	height:407px;
-	z-index: 3;
+	height:626px;
+	z-index: 100;
 	padding:0 25px;
 	max-width: 100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	padding-top:1.5rem;
 }
 
 .send-quote-btn{
@@ -483,5 +487,14 @@ header{
 @media (max-width:740px){
 	.select-hoops{
 		top:-140px;
+	}
+}
+
+@media (max-width: 481px){
+	.form-quote{
+		height:calc(100% - 50px);
+		overflow-x:scroll;
+		display:unset;
+		padding-top: unset !important;
 	}
 }

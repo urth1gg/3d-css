@@ -269,7 +269,7 @@ export default function Basketball(){
 
 	function generateImage(){
 		if(type === 'Laykold (Acrylic Coating) 🎨'){
-			return "https://courtsurfacespecialists.com/wp-content/uploads/2019/11/cropped-final_logo_colour-1.jpg"
+			return "//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w"
 		}else{
 			return "//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396"
 		}
@@ -534,7 +534,7 @@ export default function Basketball(){
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css" />
 			</Helmet>
 			<div className="left-menu">
-					<i class="fas fa-angle-double-left" onClick={() =>{
+					<i className="fas fa-angle-double-left" onClick={() =>{
 						document.querySelector(".left-menu").style.display = 'none'
 					}}></i>
 					<div className="center mbot-1">
@@ -614,7 +614,7 @@ export default function Basketball(){
 				</div>
 
 				<div className="right-menu">
-					<i class="fas fa-angle-double-right" onClick={() =>{
+					<i className="fas fa-angle-double-right" onClick={() =>{
 						document.querySelector(".right-menu").style.display = 'none'
 					}}></i>
 

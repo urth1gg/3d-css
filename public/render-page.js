@@ -5886,24 +5886,24 @@ function y(){return(y=Object.assign||function(e){for(var t=1;t<arguments.length;
 /***/ }),
 
 /***/ "react-dom/server":
-/*!***************************************************************************!*\
-  !*** external "C:\\Projects\\Tennis\\node_modules\\react-dom\\server.js" ***!
-  \***************************************************************************/
+/*!******************************************************************************!*\
+  !*** external "/root/projects/node/3d-css/node_modules/react-dom/server.js" ***!
+  \******************************************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("C:\\Projects\\Tennis\\node_modules\\react-dom\\server.js");
+module.exports = require("/root/projects/node/3d-css/node_modules/react-dom/server.js");
 
 /***/ }),
 
 /***/ "react":
-/*!**********************************************************************!*\
-  !*** external "C:\\Projects\\Tennis\\node_modules\\react\\index.js" ***!
-  \**********************************************************************/
+/*!*************************************************************************!*\
+  !*** external "/root/projects/node/3d-css/node_modules/react/index.js" ***!
+  \*************************************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("C:\\Projects\\Tennis\\node_modules\\react\\index.js");
+module.exports = require("/root/projects/node/3d-css/node_modules/react/index.js");
 
 /***/ }),
 

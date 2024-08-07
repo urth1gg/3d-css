@@ -256,12 +256,11 @@ input:checked + .slider:before {
 	height: 35px;
 	background-size: cover;
 	border-radius: 5px;
-	background-image: url('https://courtsurfacespecialists.com/wp-content/themes/Avada-Child-Theme/court-builder/img/gradient.png');
+	background-image: url('https://i.ibb.co/YtyMxbR/color-wheel.png');
 	background-repeat: no-repeat;
 	cursor: pointer;
 	background-position: center;
 	position: relative;
-	mix-blend-mode: difference;
 }
 
 .image-picker::after{
@@ -271,7 +270,7 @@ input:checked + .slider:before {
 	height: 13px;
 	display: block;
 	border-radius: 100%;
-	background: #000;
+	background: white;
 	top:50%;
 	left:50%;
 	transform: translate(-50%,-50%);
