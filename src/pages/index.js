@@ -13,7 +13,7 @@ const IndexPage = () => {
             </a>
             <h3>COURT DESIGNER</h3>
             <a href="https://diycourt.ca/" className="right-logo">
-              <img src="//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396" alt="DIY CA" />
+              <img src="//i.ibb.co/F77XTs7/canada-v1.png" alt="DIY CA" />
             </a>
           </div>
         </div>

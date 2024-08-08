@@ -271,7 +271,7 @@ export default function Basketball(){
 		if(type === 'Laykold (Acrylic Coating) 🎨'){
 			return "//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w"
 		}else{
-			return "//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396"
+			return "//i.ibb.co/1Xjtgx0/canada-logo.png"
 		}
 	}
 
@@ -513,8 +513,9 @@ export default function Basketball(){
 	return(
 		<>
 			<Helmet>
-				<title>Tennis Court 3D</title>
+				<title>CSS Ltd & DIY Court Canada - Court Designer</title>
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css" />
+				<link rel="icon" type="image/x-icon" href="https://images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/f8d21ede-b73c-4812-ae25-3beeef6a546a/favicon.ico?format=100w"></link>
 			</Helmet>
 			<div className="left-menu">
 
@@ -524,7 +525,7 @@ export default function Basketball(){
 
 					<div className="center mbot-1">
 				        <a className="logo-img-css" href={generateHref()}>
-				            <img src={generateImage()} alt={generateAlt()} />
+				            <img src={generateImage()} alt={generateAlt()} style={{filter: 'unset'}}/>
 				        </a>
 					</div>
 					<div>

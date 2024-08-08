@@ -72,8 +72,8 @@ const Animated = () => {
 	return(
 		<div className="loading-container">
 			<div>
-				<img src="//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w" width="100" />
-				<img style={{marginLeft:'15px'}} src="//cdn.shopify.com/s/files/1/1713/4277/files/new_logo_e1f9929b-5f20-4af7-92d2-696adae67032_410x.png?v=1539831396" width="150px" />
+				<img src="//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w" width="100" style={{filter:'unset'}} />
+				<img style={{marginLeft:'15px', filter: 'unset'}} src="https://diycourt.ca/cdn/shop/files/DIY_COURT_CANADA_-_LOGO_SQUARE.jpg?v=1693939051&width=1500" width="150px" />
 			</div>
 		
 			<div className="animation-parent">

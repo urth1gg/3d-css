@@ -46,6 +46,7 @@ const Animated = () => {
 			changeColors("0%", "0%", "0%", "0%")
 		}
 	},[goBack])
+	
 	return(
 		<div className="loading-container">
 			<div className="animation-parent">
