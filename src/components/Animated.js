@@ -73,7 +73,7 @@ const Animated = () => {
 		<div className="loading-container">
 			<div>
 				<img src="//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w" width="100" style={{filter:'unset'}} />
-				<img style={{marginLeft:'15px', filter: 'unset'}} src="https://diycourt.ca/cdn/shop/files/DIY_COURT_CANADA_-_LOGO_SQUARE.jpg?v=1693939051&width=1500" width="150px" />
+				<img style={{marginLeft:'15px', filter: 'unset'}} src="//i.ibb.co/1Xjtgx0/canada-logo.png" width="150px" />
 			</div>
 		
 			<div className="animation-parent">

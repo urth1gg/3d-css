@@ -9,11 +9,11 @@ const IndexPage = () => {
         <div className="container">
           <div className="logo">
             <a href="http://www.courtsurfacespecialists.com/">
-              <img src="//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w" alt="Court Surface Specialists" />
+              <img style={{filter:'unset'}} src="//images.squarespace-cdn.com/content/v1/6643bd23b8f7dc12ccdd9c1b/1d1e2613-9914-425f-aa65-025066064937/CSS+Logo+Full.png?format=1500w" alt="Court Surface Specialists" />
             </a>
             <h3>COURT DESIGNER</h3>
             <a href="https://diycourt.ca/" className="right-logo">
-              <img src="//i.ibb.co/F77XTs7/canada-v1.png" alt="DIY CA" />
+              <img src="//i.ibb.co/1Xjtgx0/canada-logo.png" alt="DIY CA" style={{filter:'unset'}}/>
             </a>
           </div>
         </div>
